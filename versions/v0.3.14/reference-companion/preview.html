@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>完整整合 · 表情与动作</title><style>
+*{box-sizing:border-box}body{margin:0;color:#34251f;background:#f0e9e0;font:15px system-ui}main{max-width:1150px;padding:28px;margin:auto}h1{font-size:27px;margin:5px 0}p{line-height:1.6}.layout{display:grid;grid-template-columns:1fr 320px;gap:18px}.panel{background:#fffbf5;padding:18px;border:1px solid #cfbfb0;border-radius:14px}#stage{height:570px;position:relative;overflow:hidden;touch-action:none;background:#eee7dc;border-radius:8px}#stage svg{width:100%;height:100%;display:block}.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}button{border:1px solid #c5b3a2;border-radius:6px;padding:8px;color:#50382b;background:#fff7ed;cursor:pointer}button:hover{background:#eacbb3}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}h2{font-size:17px}small,#status{color:#745947;font-size:12px}label{display:flex;align-items:center;gap:8px;margin-top:12px}@media(max-width:800px){.layout{grid-template-columns:1fr}#stage{height:490px}}
+</style><main><small>REFERENCE COMPANION · 局部轮廓还原 v0.3.14</small><h1>胸口、肩根与尾巴局部修正</h1><p>胸口恢复原立绘的平整面料，肩根修正内缘覆盖，尾巴恢复原图较圆且贴身的毛团轮廓。保留头颈连接、表情和挥手骨链。护板固定在外套，遮住交叠的小臂；护板外的手掌在头发前方轻摆。点击表情后，可继续挥手、跑步、坐下和说话。</p><div class="layout"><section class="panel"><div id="stage"></div><p id="status">载入素材中…</p><div class="row"><button id="pause">暂停</button><button id="reset">回到站立</button><button id="talk">说话</button><button id="listen">倾听</button><button id="reference">原图对照</button></div><label>大小 <input id="size" type="range" min="0.65" max="2" step="0.05" value="1.5"></label><p><small>按住角色拖动，松开可放下或抛出。表情贴图、眉眼、嘴型及 gaze 补边沿用上传包。原图对照展示细化前的原始图片。</small></p></section><aside class="panel"><h2>表情</h2><div id="expressions" class="buttons"></div><h2>动作</h2><div id="motions" class="buttons"></div><p><small>本页引用同目录素材。请通过本地 HTTP 服务打开，详见 README。验证结果见 verification。</small></p></aside></div></main><script type="module">
+const model=await(await fetch(new URL('./model.json',import.meta.url))).json();
+const manifest=await(await fetch(new URL('./figure.json',import.meta.url))).json();
+try{
+ const kit=await import('./kit/body.js'),figures=await import('./figure.js'),stage=document.getElementById('stage');
+ let bounds={W:stage.clientWidth,H:stage.clientHeight,floorY:stage.clientHeight-25,S:1.5};
+ const figure=await figures.createReferenceFigure(new URL('.',location.href),{kit,model,asset:p=>new URL(p,import.meta.url)});
+ const host={root:stage,bounds:()=>bounds,start:{x:bounds.W*.5,facing:1},emit:()=>{},sound:()=>{}};const body=kit.createBody(host,{figure});body.set({roam:'off'});
+ let paused=matchMedia('(prefers-reduced-motion: reduce)').matches,talking=false,original=false,listen=false;let selected='neutral';
+ const pinFace=()=>{if(selected!=='sleep')body.do(selected);};
+ for(const v of manifest.vocab){const b=document.createElement('button');b.textContent=v.names.zh[0];b.title=v.id;b.onclick=()=>{original=false;if(v.kind==='expression'){selected=v.id;body.do(v.id);}else{body.do(v.id);if(v.id!=='sleep'){pinFace();}}};document.getElementById(v.kind==='expression'?'expressions':'motions').append(b);}
+ const sleep=document.createElement('button');sleep.textContent='睡眠';sleep.onclick=()=>{selected='sleep';body.do('sleep');};document.getElementById('expressions').append(sleep);
+ document.getElementById('pause').textContent=paused?'播放':'暂停';document.getElementById('pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'播放':'暂停';};
+ document.getElementById('reset').onclick=()=>{original=false;selected='neutral';figure.reset();body.do('stand');body.do('neutral');};
+ document.getElementById('talk').onclick=e=>{talking=!talking;e.target.textContent=talking?'停止说话':'说话';};
+ document.getElementById('listen').onclick=e=>{listen=!listen;body.set({listening:listen});e.target.textContent=listen?'停止倾听':'倾听';};
+ document.getElementById('reference').onclick=()=>{original=!original;};
+ document.getElementById('size').oninput=e=>{bounds.S=+e.target.value;body.resize();};
+ const resize=()=>{bounds.W=stage.clientWidth;bounds.H=stage.clientHeight;bounds.floorY=bounds.H-25;body.resize();};window.addEventListener('resize',resize);
+ const point=e=>{const r=stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top,t:e.timeStamp};};
+ stage.onpointerdown=e=>{stage.setPointerCapture(e.pointerId);body.pointer('down',point(e));};stage.onpointermove=e=>body.pointer('move',point(e));stage.onpointerup=e=>body.pointer('up',point(e));stage.onpointercancel=e=>body.pointer('cancel',point(e));stage.onpointerleave=()=>body.pointer('leave');
+ let prev=performance.now(),speech=0,held=0;function tick(now){const dt=Math.min(.05,(now-prev)/1000);prev=now;if(!paused){held+=dt;if(selected!=='sleep'&&held>.65){pinFace();held=0;}if(talking){speech+=dt;if(speech>.14){body.talk();speech=0;}}body.step(dt);if(original)figure.drawRest(stage.querySelector('svg').children[1]);}requestAnimationFrame(tick);}requestAnimationFrame(tick);
+ document.getElementById('status').textContent='载入完成 · 原始表情控制器 + 动作包绑定';window.debug={body,figure,kit,model};
+}catch(e){document.getElementById('status').textContent='载入失败：'+e.message;console.error(e);}
+</script></html>

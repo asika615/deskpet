@@ -1,0 +1,28 @@
+{
+  "version": "0.3.14",
+  "baseline": "0.3.13",
+  "method": "Production component renderer and face pipeline, software kit injection",
+  "frames": 480,
+  "expressionCases": 120,
+  "allNonTailMeshVerticesIdentical": true,
+  "allWaveDiagnosticsIdentical": true,
+  "protectedRuntimeTexturesIdentical": true,
+  "oldPngFilesByteUnchanged": 181,
+  "protectedFilesByteUnchanged": 190,
+  "opaqueTriangleFolds": 0,
+  "tail": {
+    "changedFields": [
+      "file",
+      "sourceBox",
+      "box",
+      "parent"
+    ],
+    "existingBendPivotDepthAndMotionUnchanged": true,
+    "staticInnerRootRegistration": "24 px inner root plus up to 80 px only across original glove cutout, easing to zero outside inner root"
+  },
+  "limitations": [
+    "Software rasterization; no browser GPU or Electron import test",
+    "Original reference retains its own expression; v13/v14 use the same unchanged native neutral expression",
+    "Tail art hidden in original was not invented or extended"
+  ]
+}
