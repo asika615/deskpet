@@ -1,0 +1,43 @@
+{
+  "reference": {
+    "visibleSkinAreaInRoi": 2511,
+    "skinWidthAtRows": {
+      "715": 48,
+      "725": 59,
+      "735": 64,
+      "745": 38,
+      "755": 14
+    }
+  },
+  "before": {
+    "visibleSkinAreaInRoi": 2304,
+    "skinWidthAtRows": {
+      "715": 48,
+      "725": 42,
+      "735": 39,
+      "745": 23,
+      "755": 15
+    }
+  },
+  "after": {
+    "visibleSkinAreaInRoi": 2657,
+    "skinWidthAtRows": {
+      "715": 48,
+      "725": 42,
+      "735": 50,
+      "745": 46,
+      "755": 16
+    }
+  },
+  "method": {
+    "roi": [
+      585,
+      700,
+      675,
+      785
+    ],
+    "skinThreshold": "R>210, R-G>5, R-B>12, alpha>200",
+    "limitation": "Visible flat-skin pixel estimate; occlusion and costume differ. It is not total anatomical or 3-D shoulder volume."
+  },
+  "visibleAreaIncreasePercent": 15.321180555555557
+}

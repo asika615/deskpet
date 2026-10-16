@@ -1,0 +1,586 @@
+{
+  "manifest": 2,
+  "api": 2,
+  "id": "reference-companion",
+  "version": "0.3.11",
+  "name": {
+    "zh": "原图兽耳桌宠（头颈衔接修复）",
+    "en": "Reference Companion (Integrated Neckline)"
+  },
+  "about": {
+    "zh": "原图中的棕发兽耳角色；双马尾、红橙眼睛、黑白红服装、黑色手套与靴子、棕色大尾巴。造型与配色取自用户原图。",
+    "en": "The brown-haired animal-eared character in the supplied reference image, with twin tails, orange-red eyes, black/white/red clothing, gloves, boots and a brown tail."
+  },
+  "author": "User reference / adapted for Coopanion",
+  "credits": [
+    {
+      "role": "原图",
+      "name": "用户提供；原始作者未标注"
+    },
+    {
+      "role": "渲染器与动作系统",
+      "name": "Pal-AI-Lab / Coopanion"
+    }
+  ],
+  "entry": "figure.js",
+  "export": "createReferenceBody",
+  "model": "model.json",
+  "thumb": "thumb.png",
+  "axes": [],
+  "presets": [],
+  "vocab": [
+    {
+      "id": "neutral",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "平静"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt neutral 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt neutral expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "happy",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "开心",
+          "高兴"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt happy 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt happy expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "wink",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "眨眼"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt wink 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt wink expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "love",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "喜欢",
+          "爱心"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt love 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt love expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "shy",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "害羞"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt shy 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt shy expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "surprised",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "惊讶",
+          "吃惊"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt surprised 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt surprised expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "angry",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "生气"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt angry 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt angry expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "sad",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "难过",
+          "伤心"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt sad 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt sad expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "sleepy",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "犯困",
+          "困"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt sleepy 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt sleepy expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "thinking",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "思考",
+          "想想"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt thinking 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt thinking expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "smug",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "得意",
+          "嘚瑟"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt smug 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt smug expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "pout",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "嘟嘴",
+          "哼"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt pout 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt pout expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "worried",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "担心",
+          "着急"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt worried 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt worried expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "determined",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "认真",
+          "坚定"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt determined 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt determined expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "flustered",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "慌张",
+          "窘"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt flustered 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt flustered expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "scared",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "害怕",
+          "吓到"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt scared 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt scared expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "excited",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "期待",
+          "星星眼"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt excited 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt excited expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "cry",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "大哭",
+          "哭"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt cry 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt cry expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "confused",
+      "kind": "expression",
+      "names": {
+        "zh": [
+          "疑惑",
+          "问号"
+        ]
+      },
+      "about": {
+        "zh": "使用上传的 r2.3-rebuilt confused 原始表情组件；不使用旧版五官。",
+        "en": "Uses unchanged r2.3-rebuilt confused expression components."
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "stand",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "站起",
+          "站"
+        ]
+      },
+      "about": {
+        "zh": "站起来(坐着、睡着时)",
+        "en": "stands up (when sitting or asleep)"
+      },
+      "seconds": 1.2
+    },
+    {
+      "id": "jump",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "跳",
+          "跳起来"
+        ]
+      },
+      "about": {
+        "zh": "原地起跳",
+        "en": "jumps on the spot"
+      },
+      "seconds": 1.2
+    },
+    {
+      "id": "hop",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "小跳",
+          "蹦"
+        ]
+      },
+      "about": {
+        "zh": "小小蹦一下",
+        "en": "a small hop"
+      },
+      "seconds": 0.9
+    },
+    {
+      "id": "look",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "张望",
+          "看看"
+        ]
+      },
+      "about": {
+        "zh": "左右张望",
+        "en": "looks left and right"
+      },
+      "seconds": 2.7
+    },
+    {
+      "id": "turn",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "转身"
+        ]
+      },
+      "about": {
+        "zh": "转向另一边",
+        "en": "turns to face the other way"
+      },
+      "seconds": 0.4
+    },
+    {
+      "id": "nod",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "点头"
+        ]
+      },
+      "about": {
+        "zh": "低头两下",
+        "en": "dips the head twice"
+      },
+      "seconds": 0.8
+    },
+    {
+      "id": "shake",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "摇头"
+        ]
+      },
+      "about": {
+        "zh": "脸左右转",
+        "en": "turns the face left and right"
+      },
+      "seconds": 0.8
+    },
+    {
+      "id": "spin",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "转圈"
+        ]
+      },
+      "about": {
+        "zh": "原地转一圈",
+        "en": "spins around once on the spot"
+      },
+      "seconds": 0.8
+    },
+    {
+      "id": "sit",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "坐下",
+          "坐"
+        ]
+      },
+      "about": {
+        "zh": "坐下",
+        "en": "sits down"
+      },
+      "seconds": 0.8,
+      "lasting": true
+    },
+    {
+      "id": "sleep",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "睡觉",
+          "睡"
+        ]
+      },
+      "about": {
+        "zh": "坐着打盹",
+        "en": "dozes sitting down"
+      },
+      "seconds": 0.8,
+      "lasting": true
+    },
+    {
+      "id": "dizzy",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "晕",
+          "转晕"
+        ]
+      },
+      "about": {
+        "zh": "头晕眼花几秒",
+        "en": "dizzy for a few seconds"
+      },
+      "seconds": 3.2
+    },
+    {
+      "id": "walk",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "走走",
+          "散步"
+        ]
+      },
+      "about": {
+        "zh": "随便走一段",
+        "en": "wanders a little way"
+      },
+      "seconds": 12
+    },
+    {
+      "id": "run",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "跑",
+          "跑起来"
+        ]
+      },
+      "about": {
+        "zh": "跑到屏幕另一头",
+        "en": "runs to the other end of the screen"
+      },
+      "seconds": 12
+    },
+    {
+      "id": "wave",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "招手",
+          "打招呼"
+        ]
+      },
+      "about": {
+        "zh": "举起靠近你的那只手挥一挥",
+        "en": "raises the hand nearer to you and waves"
+      },
+      "seconds": 1.7
+    },
+    {
+      "id": "bow",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "鞠躬"
+        ]
+      },
+      "about": {
+        "zh": "闭眼,上身往前倾鞠一躬",
+        "en": "closes the eyes and bows from the waist"
+      },
+      "seconds": 1.7
+    },
+    {
+      "id": "shiver",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "发抖",
+          "哆嗦"
+        ]
+      },
+      "about": {
+        "zh": "缩着身子抖一会儿",
+        "en": "huddles up and shivers for a while"
+      },
+      "seconds": 1.9
+    },
+    {
+      "id": "flap",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "扑腾",
+          "激动"
+        ]
+      },
+      "about": {
+        "zh": "开心地蹦起来,兽耳、尾巴、呆毛一起扑腾",
+        "en": "bounces happily, ears, tail and ahoge all flapping"
+      },
+      "seconds": 1.5
+    },
+    {
+      "id": "dance",
+      "kind": "motion",
+      "names": {
+        "zh": [
+          "跳舞",
+          "摇摆"
+        ]
+      },
+      "about": {
+        "zh": "原地踩着节拍摇摆三秒,冒音符",
+        "en": "sways to a beat on the spot for three seconds, music notes floating up"
+      },
+      "seconds": 3.4
+    }
+  ],
+  "sounds": {},
+  "can": {
+    "walk": true
+  },
+  "license": "Code: AGPL-3.0-or-later; reference artwork: original rights retained"
+}

@@ -1,0 +1,286 @@
+--- v0.3.10/figure.js
++++ v0.3.11/figure.js
+@@ -3,6 +3,7 @@
+  */
+ import { motionDriver } from './motion.js';
+ import { createExpressionBridge } from './expression-bridge.js';
++import { createCollarConnection, assembleConnectedTorso } from './collar-connection.js';
+ const NS='http://www.w3.org/2000/svg';
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const smooth=(a,b,x)=>{let k=clamp((x-a)/(b-a),0,1);return k*k*(3-2*k);};
+@@ -16,6 +17,10 @@
+  const bridge=await createExpressionBridge(base,opts);
+  const faceCanvas=bridge.canvas,faceContext=bridge.context;
+  const textures={};await Promise.all(model.parts.map(async p=>{textures[p.tex]=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))(p.file));}));
++ const torsoPart=model.parts.find(p=>p.id==='torso');
++ const neckHeadMatte=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))('reference-head-matte.png'));
++ textures[torsoPart.tex]=assembleConnectedTorso(source,neckHeadMatte,textures[torsoPart.tex],torsoPart.sourceBox,
++  opts.createCanvas??((w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}));
+  const {S,X0,FEET}=model.units;
+  const U=x=>128+(x-X0)*S,V=y=>256+(y-FEET)*S;
+  const driver=motionDriver(model),PV=model.pivots;
+@@ -50,6 +55,7 @@
+   hairLeft:{kind:'warp',parent:'headMid',rect:[U(65),V(195),U(475),V(965)]},
+   hairRight:{kind:'warp',parent:'headMid',rect:[U(890),V(215),U(1170),V(965)]},
+   clothes:{kind:'warp',parent:'body',rect:[U(390),V(659),U(962),V(1190)]},
++  collarConnection:{kind:'warp',parent:'clothes',rect:[U(575),V(648),U(840),V(810)]},
+   skirtSit:{kind:'warp',parent:'body',rect:[U(345),V(940),U(1040),V(1150)]},
+   finNear:{kind:'warp',parent:'headMid',rect:[U(448),V(10),U(693),V(275)]},
+   finFar:{kind:'warp',parent:'headMid',rect:[U(690),V(48),U(893),V(275)]},
+@@ -92,6 +98,7 @@
+  function draw(g,fc,o) {
+   if(mounted!==g||!g.contains(fo))mount(g);
+   const r=driver.update(fc,o),st=r.st;
++  st.collarConnection=createCollarConnection(model.units);
+   st.clothes={fn:(u,v,x,y)=>{
+    const a=(st.waist.a||0)*Math.PI/180*(1-smooth(V(936),V(1190),y)),c=Math.cos(a),s=Math.sin(a),dx=x-PV.waist[0],dy=y-PV.waist[1];
+    const q=st.skirt.fn(u,clamp((y-V(785))/(V(1190)-V(785)),0,1));
+--- v0.3.10/model.json
++++ v0.3.11/model.json
+@@ -302,7 +302,7 @@
+       "id": "torso",
+       "tex": "torso",
+       "file": "tex/torsoCollarThin.png",
+-      "parent": "clothes",
++      "parent": "collarConnection",
+       "z": 5,
+       "sourceBox": [
+         567,
+@@ -317,8 +317,8 @@
+         56.73
+       ],
+       "grid": [
+-        15,
+-        17
++        28,
++        62
+       ]
+     },
+     {
+@@ -816,5 +816,25 @@
+       468,
+       272
+     ]
++  },
++  "collarConnectionRepair": {
++    "method": "Localized monotonic neckline mesh, existing texture pixels only",
++    "sourceRows": [
++      658,
++      710,
++      737,
++      770,
++      810
++    ],
++    "targetRows": [
++      650,
++      696,
++      708,
++      752,
++      810
++    ],
++    "head": "Unchanged transform and silhouette",
++    "scope": "Torso neckline only: upper source ROI y<770; displacement field x575..840 and y<810; lower torso and all other parts unchanged at their original registration",
++    "art": "Original collar and central neckline pixels assembled at runtime; minimal flat skin backing under existing shoulders"
+   }
+ }
+--- v0.3.10/figure.json
++++ v0.3.11/figure.json
+@@ -2,10 +2,10 @@
+   "manifest": 2,
+   "api": 2,
+   "id": "reference-companion",
+-  "version": "0.3.10",
++  "version": "0.3.11",
+   "name": {
+-    "zh": "原图兽耳桌宠（薄颈环·原版表情）",
+-    "en": "Reference Companion (Thin Collar / Restored Face)"
++    "zh": "原图兽耳桌宠（头颈衔接修复）",
++    "en": "Reference Companion (Integrated Neckline)"
+   },
+   "about": {
+     "zh": "原图中的棕发兽耳角色；双马尾、红橙眼睛、黑白红服装、黑色手套与靴子、棕色大尾巴。造型与配色取自用户原图。",
+--- v0.3.10/collar-connection.js
++++ v0.3.11/collar-connection.js
+@@ -0,0 +1,88 @@
++/** Local collar/bodice registration in original artwork pixels.
++ * Head, shoulder FK, plate and coat are deliberately outside this field.
++ * The band is buried under the existing chin/curls; the tall under-band
++ * insert is compressed into a short neckline seam, and the upper bib rises
++ * to meet it. Below y=810 all source points stay in place.
++ */
++const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
++const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t);};
++export const COLLAR_CONNECTION=Object.freeze({
++  sourceRows:[658,710,737,770,810],
++  targetRows:[650,696,708,752,810],
++  support:[575,610,790,840],
++  collarCenter:707,
++  collarSpread:0,
++});
++
++export function collarOffset(x,y){
++  const c=COLLAR_CONNECTION;
++  if(y>=810||x<=575||x>=840)return[0,0];
++  const weight=smooth(575,610,x)*(1-smooth(790,840,x));
++  // Piecewise linear, strictly increasing destination rows: no fold-over in
++  // the tightly compressed seam (smoothstep here could invert the mesh).
++  let yy=y-8;
++  for(let i=0;i<c.sourceRows.length-1;i++)if(y>=c.sourceRows[i]&&y<c.sourceRows[i+1]){
++    const t=(y-c.sourceRows[i])/(c.sourceRows[i+1]-c.sourceRows[i]);
++    yy=c.targetRows[i]+t*(c.targetRows[i+1]-c.targetRows[i]);break;
++  }
++  const band=1-smooth(710,737,y);
++  const side=clamp(Math.abs(x-c.collarCenter)/80,0,1);
++  return[(x-c.collarCenter)*c.collarSpread*band*weight,
++    ((yy-y)-3*side*side*(1-smooth(658,710,y)))*weight];
++}
++
++/** Use the supplied artwork's collar and central neckline pixels.
++ * This is native atlas assembly. All runtime inputs already ship in v0.3.10.
++ * Do not transfer original head pixels into the torso: they must stay on Head.
++ * The small neck insert is replaced, with a short blend into the existing bib.
++ */
++export function assembleConnectedTorso(source,headMatte,torso,box,make){
++  const [x0,y0,x1,y1]=box,w=x1-x0,h=y1-y0;
++  const canvas=make(w,h),g=canvas.getContext('2d');g.drawImage(torso,0,0,w,h);
++  const old=g.getImageData(0,0,w,h),patch=make(w,h),pg=patch.getContext('2d');
++  pg.drawImage(source,x0,y0,w,h,0,0,w,h);
++  pg.globalCompositeOperation='destination-out';pg.drawImage(headMatte,x0,y0,w,h,0,0,w,h);
++  const ref=pg.getImageData(0,0,w,h);
++  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
++    const sx=x+x0,sy=y+y0;
++    if(sy>=770)continue;
++    // Keep the already corrected shoulders and white plate. Bright shoulder skin is excluded below.
++    const left=1-smooth(625,650,sx),right=smooth(775,798,sx);
++    const fadeStart=737-23*Math.max(left,right),fadeEnd=770-26*Math.max(left,right);
++    let weight=smooth(575,595,sx)*(1-smooth(804,828,sx))*(1-smooth(fadeStart,fadeEnd,sy));
++    // The separate shoulder sprite already supplies the exposed skin. Moving
++    // a second copy with the bib would split that skin during a raised arm.
++    // Restore only the central insert below the band, keeping both shoulders.
++    const center=smooth(625,652,sx)*(1-smooth(775,798,sx));
++    weight*=1-smooth(700,714,sy)*(1-center);
++    const isBuckle=sx>=697&&sx<=744&&sy<=716;
++    if(!isBuckle)weight*=1-smooth(140,170,ref.data[(y*w+x)*4]);
++    if(weight<=0)continue;
++    const i=(y*w+x)*4,ra=ref.data[i+3]/255,oa=old.data[i+3]/255;
++    const a=ra*weight+oa*(1-weight);
++    for(let k=0;k<3;k++)old.data[i+k]=a?(ref.data[i+k]*ra*weight+old.data[i+k]*oa*(1-weight))/a:0;
++    old.data[i+3]=a*255;
++  }
++  g.putImageData(old,0,0);
++  // Simple Q-style neckline backing, behind the existing sprites. This is
++  // editable native geometry, not another copy of the rotating shoulder.
++  // Buried ends extend under the current shoulder sprite and white plate.
++  g.save();g.globalCompositeOperation='destination-over';g.translate(-x0,-y0);
++  g.fillStyle='#ffe3d3';
++  g.beginPath();g.moveTo(613,704);
++  g.bezierCurveTo(627,707,645,714,657,730);
++  g.lineTo(648,779);g.lineTo(602,760);
++  g.bezierCurveTo(594,746,601,721,613,704);g.closePath();g.fill();
++  g.beginPath();g.moveTo(766,707);
++  g.bezierCurveTo(779,710,790,727,798,745);
++  g.lineTo(785,763);g.lineTo(769,736);g.closePath();g.fill();
++  g.restore();return canvas;
++}
++
++export function createCollarConnection(units){
++  const {S,X0,FEET}=units;
++  return {fn:(u,v,x,y)=>{
++    const q=collarOffset((x-128)/S+X0,(y-256)/S+FEET);
++    return[q[0]*S,q[1]*S];
++  }};
++}
+--- v0.3.10/preview.html
++++ v0.3.11/preview.html
+@@ -1,6 +1,6 @@
+ <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>完整整合 · 表情与动作</title><style>
+ *{box-sizing:border-box}body{margin:0;color:#34251f;background:#f0e9e0;font:15px system-ui}main{max-width:1150px;padding:28px;margin:auto}h1{font-size:27px;margin:5px 0}p{line-height:1.6}.layout{display:grid;grid-template-columns:1fr 320px;gap:18px}.panel{background:#fffbf5;padding:18px;border:1px solid #cfbfb0;border-radius:14px}#stage{height:570px;position:relative;overflow:hidden;touch-action:none;background:#eee7dc;border-radius:8px}#stage svg{width:100%;height:100%;display:block}.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}button{border:1px solid #c5b3a2;border-radius:6px;padding:8px;color:#50382b;background:#fff7ed;cursor:pointer}button:hover{background:#eacbb3}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}h2{font-size:17px}small,#status{color:#745947;font-size:12px}label{display:flex;align-items:center;gap:8px;margin-top:12px}@media(max-width:800px){.layout{grid-template-columns:1fr}#stage{height:490px}}
+-</style><main><small>REFERENCE COMPANION · 薄颈环 · 原版表情 v0.3.10</small><h1>薄颈环 · 表情回退</h1><p>脖环变薄并简化；恢复旧版表情线条，保留当前头部结构与肩部动画。护板固定在外套，遮住交叠的小臂；护板外的手掌在头发前方轻摆。点击表情后，可继续挥手、跑步、坐下和说话。</p><div class="layout"><section class="panel"><div id="stage"></div><p id="status">载入素材中…</p><div class="row"><button id="pause">暂停</button><button id="reset">回到站立</button><button id="talk">说话</button><button id="listen">倾听</button><button id="reference">原图对照</button></div><label>大小 <input id="size" type="range" min="0.65" max="2" step="0.05" value="1.5"></label><p><small>按住角色拖动，松开可放下或抛出。表情贴图、眉眼、嘴型及 gaze 补边沿用上传包。原图对照展示细化前的原始图片。</small></p></section><aside class="panel"><h2>表情</h2><div id="expressions" class="buttons"></div><h2>动作</h2><div id="motions" class="buttons"></div><p><small>本页引用同目录素材。请通过本地 HTTP 服务打开，详见 README。验证结果见 verification。</small></p></aside></div></main><script type="module">
++</style><main><small>REFERENCE COMPANION · 头颈衔接修复 v0.3.11</small><h1>头颈与领口一体衔接</h1><p>脖环上缘嵌入现有下巴与侧发后方；缩减下缘竖向连接段，让胸口承接领口。保留当前头部轮廓、表情和肩部动画。护板固定在外套，遮住交叠的小臂；护板外的手掌在头发前方轻摆。点击表情后，可继续挥手、跑步、坐下和说话。</p><div class="layout"><section class="panel"><div id="stage"></div><p id="status">载入素材中…</p><div class="row"><button id="pause">暂停</button><button id="reset">回到站立</button><button id="talk">说话</button><button id="listen">倾听</button><button id="reference">原图对照</button></div><label>大小 <input id="size" type="range" min="0.65" max="2" step="0.05" value="1.5"></label><p><small>按住角色拖动，松开可放下或抛出。表情贴图、眉眼、嘴型及 gaze 补边沿用上传包。原图对照展示细化前的原始图片。</small></p></section><aside class="panel"><h2>表情</h2><div id="expressions" class="buttons"></div><h2>动作</h2><div id="motions" class="buttons"></div><p><small>本页引用同目录素材。请通过本地 HTTP 服务打开，详见 README。验证结果见 verification。</small></p></aside></div></main><script type="module">
+ const model=await(await fetch(new URL('./model.json',import.meta.url))).json();
+ const manifest=await(await fetch(new URL('./figure.json',import.meta.url))).json();
+ try{
+--- v0.3.10/README.md
++++ v0.3.11/README.md
+@@ -1,9 +1,13 @@
+-# Reference Companion v0.3.10
++# Reference Companion v0.3.11
+ 
+-解压后 `reference-companion/figure.json` 是唯一导入入口。运行代码与素材均在包内。
++入口：`figure.json`。保留全部运行依赖；当前补丁只处理头颈与领口衔接。
+ 
+-浏览器预览：进入 reference-companion 目录，执行 `python3 -m http.server 8000`，打开 `http://localhost:8000/preview.html`。预览引用本地素材，不再重复嵌入base64；不要直接双击HTML。桌宠自身的导入方式不变。
++预览：在本目录执行 `python3 -m http.server 8000`，打开 http://localhost:8000/preview.html 。请通过本地 HTTP 服务载入 ES 模块，不要直接双击 HTML。
+ 
+-角色版权仍归原作者，代码许可见 LICENSE-AGPL-3.0.txt 与 NOTICE.md。
++`collar-connection.js` 以原立绘颈环与中央领口像素重新组装局部运行图集，并用局部网格将脖环下缘接入胸口。两侧仅增加简洁的领口承接底色；原肩部骨链与形变仍由原代码负责。
+ 
+-本次修改范围与验证结果见 CHANGELOG.md。源码差异见 changes.patch。
++Head 全局比例与位置、头壳轮廓、表情组件、头发、wave 肩肘腕、板甲与外套文件保持原样。所有 PNG 源文件与 v0.3.10 相同；变化发生在局部图集合成与 torso 顶端网格。
++
++验证：`verification/neck-connection-validation.json`。软件组件渲染、480 帧几何对照及 120 组表情输出检查通过；未进行 Electron 实机导入验证。
++
++角色版权归原作者，代码许可见 LICENSE-AGPL-3.0.txt 与 NOTICE.md。
+--- v0.3.10/CHANGELOG.md
++++ v0.3.11/CHANGELOG.md
+@@ -1,51 +1,13 @@
+-# Coopanion v0.3.10：脖环简化与表情回退
++# v0.3.11 — 头颈衔接
+ 
+-基线为本次上传的 v0.3.9，表情依据本次上传的 r2.3-rebuilt 与工程内 v0.3.8 适配代码。新上传表情包的 412 个对应文件与工程版本逐字节相同。
++以 v0.3.10 为基线，修复头、独立薄环、竖直黑色立领三段分离的读法。
+ 
+-## 分步结果
++- 恢复原立绘的脖环外形与中央领口局部像素，合成时排除头部和肩部皮肤，保留既有头部轮廓与肩部素材。
++- 脖环顶端局部向下巴与侧发后方嵌入；不移动 Head。
++- 原图坐标中 y=710..737 的连接区映射到 y=696..708，直接接入上胸。y>=810 与横向作用区以外位移为零。
++- 增加两块极简 Q 版领口承接底色，埋入原肩部与板甲后方，避免连接处出现空洞；不改变肩部、手臂或外套的绑定。
++- torso 网格加密为 28×62；其他部件的注册、层级、网格及动画代码不变。
+ 
+-1. **仅脖环**：将 Torso 贴图顶部的脖环由约58px可见素材高度压到42px（约-28%），保留上方连接基准。取消空心上沿及双片立体扣件，改成低浮雕单银扣。脖环下方使用原有领口像素局部延展衔接，连接下沿 source y=734 固定。y>=734 的 Torso 像素逐字节不变。没有移动 Head 或身体。
+-2. **表情恢复**：继续使用旧 r2.3 控制器、眼睛、gaze、嘴型。中性状态不再保留原立绘的另一套眉毛，恢复 normal-base 中旧的眉线。用差分覆盖提取旧表情，避免复制旧头壳、发际边界、下巴线及清理白边。配准仍为 x=115.4, y=25, scale=0.9，当前头部画布与节点坐标不变。
+-3. **对照与检查**：实际组件渲染留存当前、仅脖环、最终三个阶段；idle / 50% lift / 100% lift 用相同身体、镜头、表情与无摆动固定姿态。对照 PNG 另行交付，不重复嵌进运行包。
++181 个 PNG 源文件逐字节不变；未触及表情合成、motion.js、kit/body.js 或 kit/rig.js。480 帧中所有其他部件顶点及肩肘腕坐标与基线一致，120 组表情输出哈希一致，局部颈口网格无翻转。
+ 
+-## 参数与范围
+-
+-| 项目 | v0.3.9 | v0.3.10 |
+-|---|---|---|
+-| Head 整体缩放 | 1 | 1 |
+-| Head 整体附加偏移 | 0,0 | 0,0 |
+-| 表情贴图配准 x,y,scale | 115.4,25,0.9 | 115.4,25,0.9 |
+-| Torso sourceBox | [567,658,849,968] | 不变 |
+-| 脖环贴图高度 | 约58px | 42px |
+-| 脖环下方衔接区 | source y=716..734 | 上缘至700，下缘734固定 |
+-| 脖环扣件 | 双片立体银扣 | 单块较平银扣 |
+-| wave / 肩、肘、腕参数 | 当前v0.3.9 | 完全不变 |
+-| 白板甲、外套、头发、兽耳、身体比例 | 当前v0.3.9 | 完全不变 |
+-
+-## 变更文件
+-
+-- `tex/torsoCollarThin.png`：仅颈环及其下方局部衔接区；原旧版贴图留在前一版本。
+-- `model.json`：仅 torso 的 file 指向新贴图；所有 sourceBox、box、grid、parent、z、pivot 不变。
+-- `expression-bridge.js`：旧中性眉线提取、原眼嘴表现以及局部注册覆盖。
+-- `legacy-face-interior-mask.png`：旧表情与当前脸部有效皮肤区交集，排除旧发际与下巴边线。
+-- `figure.json`、`thumb.png`、轻量 `preview.html`、本说明与验证记录。
+-- `changes.patch`：文本源码差异。`runtime-assets.json`：精简运行依赖清单。
+-
+-## 验证结果与限制
+-
+-- 3个固定姿态：全部部件网格顶点、UV、alpha、板甲遮挡坐标与v0.3.9完全相同。仅贴图内容变化。
+-- 仅脖环阶段：3个姿态的表情画布与修改前逐字节相同。
+-- 最终阶段：3个姿态的头部画布在脸部局部区域 [550,430,920,662] 之外逐字节相同。
+-- `figure.js`、`motion.js`、`kit/rig.js`、`kit/body.js`、头部轮廓遮罩和双马尾贴图完全未修改。
+-- 原始表情控制器120组输入输出逐字节一致；差分前景的最大重建通道误差1.78/255。此结论针对控制器本地画布，不声称最终脸部合成每个像素都等同旧版头壳。
+-- 37个公开指令、352帧状态检查；180帧实际wave检查：非有限顶点0、可见翻折0；肩/肘/腕连接误差0，抬手时头部图层遮挡失败0，板甲仍归外套并保留轮廓遮挡。
+-- 采用原rig顶点计算和软件栅格化检查；未在实际Electron/GPU桌面环境验收。
+-- 旧中性眉、嘴仍受r2.3原素材自身清晰度限制，本次不重绘表情。恢复表情没有恢复旧的头壳轮廓。
+-
+-## 素材处理记录
+-
+-脖环局部使用内置 imagegen 编辑，再裁切配准到原 Torso 的脖环覆盖范围；未生成整个人物。输入为原Torso脖环局部与原始Q版颈环参考。英文提示核心："Simplify the thick 3D ring into a thin flatter chibi black band; keep upper attachment and width; reduce front height about25%; remove hollow elliptical opening and two-wing buckle; use one small low-relief rounded silver buckle; keep shirt/shoulders unchanged." 最终仅采用颈环像素，主体与下方连接使用原素材采样。运行包中的PNG就是最终可编辑素材。
+-
+-## 包体精简
+-
+-按代码实际加载依赖保留图片及代码，移除历史备份、参考三视图、旧预览GIF、重复的表情展示图/图集/归档、失效旧说明和逐帧网格中间文件；当前全部表情、动作和导入入口保留。自包含HTML原先重复嵌入约12MB素材，现在改为同目录引用。精简版v0.3.9的运行逻辑和运行素材不变，仅去除冗余并提供同目录预览。
++对照使用工程实际组件与生产形变函数，由软件光栅化输出。尚未进行浏览器 GPU 或 Electron 实机验收。

@@ -1,0 +1,47 @@
+{
+  "note": "Initial creation receipts. Resolve the current version before future replacement; these are not current-version guards.",
+  "files": [
+    {
+      "name": "coopanion-workspace-current.zip",
+      "library_file_id": "libfile_6f0ee61cea1081918fb8bd070e23c341",
+      "file_id": "file_0000000053e4820887c6a48db24207ed",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/output/coopanion-workspace-current.zip",
+      "initial_observed_version": 0
+    },
+    {
+      "name": "reference-companion-v0.3.11-neck-integrated.zip",
+      "library_file_id": "libfile_10df13209394819183817a267ef6e4a1",
+      "file_id": "file_00000000e618820783eb3a40e2505f74",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/output/reference-companion-v0.3.11-neck-integrated.zip",
+      "initial_observed_version": 0
+    },
+    {
+      "name": "neck-connection-comparison.png",
+      "library_file_id": "libfile_8514c1a239648191a3985fff8ff921c5",
+      "file_id": "file_0000000064cc81f5b35bc58bb6c54f6c",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/neck-connection-comparison.png",
+      "initial_observed_version": 0
+    },
+    {
+      "name": "neck-three-poses.png",
+      "library_file_id": "libfile_45acc2a56be08191ba77e8746bfbf6be",
+      "file_id": "file_000000001014820ead7984f8143d5d87",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/neck-three-poses.png",
+      "initial_observed_version": 0
+    },
+    {
+      "name": "neck-full-comparison.png",
+      "library_file_id": "libfile_0be95559cf58819191b3b56c6cb21058",
+      "file_id": "file_0000000031548243a4f4c9bbbcfc5dec",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/neck-full-comparison.png",
+      "initial_observed_version": 0
+    },
+    {
+      "name": "REPORT.md",
+      "library_file_id": "libfile_460924e4659881919886fccd32bfb72a",
+      "file_id": "file_0000000042448243871e4dd6653be54b",
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/REPORT.md",
+      "initial_observed_version": 0
+    }
+  ]
+}

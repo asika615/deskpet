@@ -1,0 +1,287 @@
+--- v0.3.11/figure.js
++++ v0.3.12/figure.js
+@@ -4,6 +4,7 @@
+ import { motionDriver } from './motion.js';
+ import { createExpressionBridge } from './expression-bridge.js';
+ import { createCollarConnection, assembleConnectedTorso } from './collar-connection.js';
++import { shoulderVolumeOffset, makeShoulderFoundation } from './shoulder-volume.js';
+ const NS='http://www.w3.org/2000/svg';
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const smooth=(a,b,x)=>{let k=clamp((x-a)/(b-a),0,1);return k*k*(3-2*k);};
+@@ -16,7 +17,10 @@
+  const source=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))(model.source.file));
+  const bridge=await createExpressionBridge(base,opts);
+  const faceCanvas=bridge.canvas,faceContext=bridge.context;
+- const textures={};await Promise.all(model.parts.map(async p=>{textures[p.tex]=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))(p.file));}));
++ const textures={};await Promise.all(model.parts.filter(p=>!p.procedural).map(async p=>{textures[p.tex]=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))(p.file));}));
++ const make=opts.createCanvas??((w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;});
++ textures.waveShoulderSkin=makeShoulderFoundation('near',make).canvas;
++ textures.farShoulderFoundation=makeShoulderFoundation('far',make).canvas;
+  const torsoPart=model.parts.find(p=>p.id==='torso');
+  const neckHeadMatte=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))('reference-head-matte.png'));
+  textures[torsoPart.tex]=assembleConnectedTorso(source,neckHeadMatte,textures[torsoPart.tex],torsoPart.sourceBox,
+@@ -32,10 +36,11 @@
+   neck:{kind:'rot',parent:'waist',pivot:PV.neck},
+   armNear:{kind:'rot',parent:'body',pivot:PV.armNear},
+   armFar:{kind:'rot',parent:'body',pivot:PV.armFar},
++  farShoulderVolume:{kind:'warp',parent:'armFar',rect:[U(750),V(700),U(845),V(825)]},
+   rightArmSocket:{kind:'rot',parent:'body',pivot:PV.rightShoulder},
+   waveUpperJoint:{kind:'rot',parent:'body',pivot:PV.waveShoulder},
+   waveSleeveRoot:{kind:'warp',parent:'waveUpperJoint',rect:[U(395),V(700),U(715),V(1070)]},
+-  shoulderSkinBridge:{kind:'warp',parent:'body',rect:[U(599),V(718),U(665),V(764)]},
++  shoulderSkinBridge:{kind:'warp',parent:'body',rect:[U(580),V(704),U(676),V(790)]},
+   waveElbowJoint:{kind:'rot',parent:'waveUpperJoint',pivot:PV.waveElbow},
+   waveWristJoint:{kind:'rot',parent:'waveElbowJoint',pivot:PV.waveWrist},
+   forearmNear:{kind:'rot',parent:'armNear',pivot:PV.elbowNear},
+@@ -98,6 +103,9 @@
+  function draw(g,fc,o) {
+   if(mounted!==g||!g.contains(fo))mount(g);
+   const r=driver.update(fc,o),st=r.st;
++  st.farShoulderVolume={fn:(u,v,x,y)=>{
++   const q=shoulderVolumeOffset((x-128)/S+X0,(y-256)/S+FEET,'far',model);return[q[0]*S,q[1]*S];
++  }};
+   st.collarConnection=createCollarConnection(model.units);
+   st.clothes={fn:(u,v,x,y)=>{
+    const a=(st.waist.a||0)*Math.PI/180*(1-smooth(V(936),V(1190),y)),c=Math.cos(a),s=Math.sin(a),dx=x-PV.waist[0],dy=y-PV.waist[1];
+@@ -136,6 +144,8 @@
+   const armDx=PV.waveElbow[0]-rx,armDy=PV.waveElbow[1]-ry,armLength=Math.hypot(armDx,armDy);
+   const ax=armDx/armLength,ay=armDy/armLength;
+   function shoulderTarget(x,y) {
++   const volume=shoulderVolumeOffset((x-128)/S+X0,(y-256)/S+FEET,'near',model);
++   x+=volume[0]*S;y+=volume[1]*S;
+    const dx=x-rx,dy=y-ry,along=dx*ax+dy*ay,outer=-dx*ay+dy*ax;
+    const w=smooth(5*S,110*S,along+.2*outer);
+    const a=st.waveUpperJoint.a*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+--- v0.3.11/model.json
++++ v0.3.12/model.json
+@@ -394,7 +394,7 @@
+       "id": "armR",
+       "tex": "armR",
+       "file": "tex/armR.png",
+-      "parent": "armFar",
++      "parent": "farShoulderVolume",
+       "z": 1.6,
+       "sourceBox": [
+         755,
+@@ -508,25 +508,27 @@
+     {
+       "id": "waveShoulderSkin",
+       "tex": "waveShoulderSkin",
+-      "file": "tex/shoulderChibi.png",
+       "parent": "shoulderSkinBridge",
+       "z": 4.95,
+       "sourceBox": [
+-        599,
+-        718,
+-        665,
+-        764
+-      ],
+-      "box": [
+-        113.17699999999999,
+-        158.095,
+-        12.078,
+-        8.418
+-      ],
+-      "grid": [
+-        14,
+-        10
+-      ]
++        580,
++        704,
++        676,
++        790
++      ],
++      "box": [
++        109.7,
++        155.53300000000002,
++        17.567999999999998,
++        15.738
++      ],
++      "grid": [
++        20,
++        18
++      ],
++      "procedural": true,
++      "generator": "shoulder-volume.js:near",
++      "referenceTexture": "tex/shoulderChibi.png"
+     },
+     {
+       "id": "waveUpper",
+@@ -622,6 +624,30 @@
+         12
+       ],
+       "occludeBy": "floatingPlate"
++    },
++    {
++      "id": "farShoulderFoundation",
++      "tex": "farShoulderFoundation",
++      "procedural": true,
++      "generator": "shoulder-volume.js:far",
++      "sourceBox": [
++        759,
++        701,
++        826,
++        790
++      ],
++      "box": [
++        142.457,
++        154.984,
++        12.261,
++        16.287
++      ],
++      "parent": "farShoulderVolume",
++      "grid": [
++        20,
++        18
++      ],
++      "z": 1.59
+     }
+   ],
+   "shoulderAttachments": {
+@@ -836,5 +862,20 @@
+     "head": "Unchanged transform and silhouette",
+     "scope": "Torso neckline only: upper source ROI y<770; displacement field x575..840 and y<810; lower torso and all other parts unchanged at their original registration",
+     "art": "Original collar and central neckline pixels assembled at runtime; minimal flat skin backing under existing shoulders"
++  },
++  "shoulderVolumeRepair": {
++    "method": "Local proximal cross-section growth and opaque Q-style foundation caps",
++    "nearGain": 0.16,
++    "farGain": 0.1,
++    "nearMaxSourcePixels": 9.5,
++    "farMaxSourcePixels": 6,
++    "preserved": [
++      "head-neck atlas",
++      "torso",
++      "joint pivots and angles",
++      "white plate",
++      "coat",
++      "forearm/wrist/hand"
++    ]
+   }
+ }
+--- v0.3.11/figure.json
++++ v0.3.12/figure.json
+@@ -2,10 +2,10 @@
+   "manifest": 2,
+   "api": 2,
+   "id": "reference-companion",
+-  "version": "0.3.11",
++  "version": "0.3.12",
+   "name": {
+-    "zh": "原图兽耳桌宠（头颈衔接修复）",
+-    "en": "Reference Companion (Integrated Neckline)"
++    "zh": "原图兽耳桌宠（肩根体量修正）",
++    "en": "Reference Companion (Shoulder Base Volume)"
+   },
+   "about": {
+     "zh": "原图中的棕发兽耳角色；双马尾、红橙眼睛、黑白红服装、黑色手套与靴子、棕色大尾巴。造型与配色取自用户原图。",
+--- v0.3.11/shoulder-volume.js
++++ v0.3.12/shoulder-volume.js
+@@ -0,0 +1,52 @@
++/** Shoulder base volume, in original artwork coordinates.
++ * The inner anchors and distal arm stay put; only the proximal cross section
++ * grows. These fields run before the existing shared shoulder skinning/FK.
++ */
++const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
++const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t);};
++export const SHOULDER_VOLUME=Object.freeze({
++  near:{gain:.16,max:9.5,along:[-78,-28,60,115]},
++  far:{gain:.10,max:6,along:[-68,-22,55,112]},
++  note:'Asymmetric inner shoulder supports; armor, torso scale and joint pivots unchanged',
++});
++
++export function shoulderVolumeOffset(x,y,side,model){
++  const {S,X0,FEET}=model.units;
++  const toSource=p=>[(p[0]-128)/S+X0,(p[1]-256)/S+FEET];
++  const p=toSource(model.pivots[side==='near'?'waveShoulder':'armFar']);
++  const e=toSource(model.pivots[side==='near'?'waveElbow':'elbowFar']);
++  const l=Math.hypot(e[0]-p[0],e[1]-p[1]),ax=(e[0]-p[0])/l,ay=(e[1]-p[1])/l;
++  const nx=side==='near'?-ay:ay,ny=side==='near'?ax:-ax;
++  const dx=x-p[0],dy=y-p[1],along=dx*ax+dy*ay,outer=dx*nx+dy*ny;
++  const c=SHOULDER_VOLUME[side];
++  const w=smooth(c.along[0],c.along[1],along)*(1-smooth(c.along[2],c.along[3],along));
++  const amount=Math.min(c.max,Math.max(0,outer)*c.gain)*w*smooth(0,14,outer);
++  return[nx*amount,ny*amount];
++}
++
++/** Editable Q-style foundation contours. They form actual opaque support
++ * under the original shoulder/sleeve sprites, not a blurred seam overlay.
++ * Near: rounded skin cap, buried into the bodice and under the white plate.
++ * Far: smaller dark inner sleeve cap, preserving the outfit's asymmetry.
++ */
++export function makeShoulderFoundation(side,make){
++  const box=side==='near'?[580,704,676,790]:[759,701,826,790];
++  const [x0,y0,x1,y1]=box,c=make(x1-x0,y1-y0),g=c.getContext('2d');
++  g.translate(-x0,-y0);g.lineJoin='round';g.lineWidth=1.8;
++  if(side==='near'){
++    g.fillStyle='#ffe3d3';g.strokeStyle='#2a1710';
++    g.beginPath();g.moveTo(653,718);
++    g.bezierCurveTo(634,711,612,716,601,729);
++    g.bezierCurveTo(593,739,591,751,597,762);
++    g.lineTo(616,779);g.bezierCurveTo(637,781,655,765,662,744);
++    g.lineTo(653,718);g.closePath();g.fill();g.stroke();
++  }else{
++    g.fillStyle='#343338';g.strokeStyle='#1f1410';
++    g.beginPath();g.moveTo(776,715);
++    g.bezierCurveTo(790,708,805,721,813,737);
++    g.bezierCurveTo(820,752,812,770,799,780);
++    g.lineTo(777,772);g.lineTo(765,747);
++    g.bezierCurveTo(764,734,768,722,776,715);g.closePath();g.fill();g.stroke();
++  }
++  return{canvas:c,sourceBox:box};
++}
+--- v0.3.11/preview.html
++++ v0.3.12/preview.html
+@@ -1,6 +1,6 @@
+ <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>完整整合 · 表情与动作</title><style>
+ *{box-sizing:border-box}body{margin:0;color:#34251f;background:#f0e9e0;font:15px system-ui}main{max-width:1150px;padding:28px;margin:auto}h1{font-size:27px;margin:5px 0}p{line-height:1.6}.layout{display:grid;grid-template-columns:1fr 320px;gap:18px}.panel{background:#fffbf5;padding:18px;border:1px solid #cfbfb0;border-radius:14px}#stage{height:570px;position:relative;overflow:hidden;touch-action:none;background:#eee7dc;border-radius:8px}#stage svg{width:100%;height:100%;display:block}.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}button{border:1px solid #c5b3a2;border-radius:6px;padding:8px;color:#50382b;background:#fff7ed;cursor:pointer}button:hover{background:#eacbb3}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}h2{font-size:17px}small,#status{color:#745947;font-size:12px}label{display:flex;align-items:center;gap:8px;margin-top:12px}@media(max-width:800px){.layout{grid-template-columns:1fr}#stage{height:490px}}
+-</style><main><small>REFERENCE COMPANION · 头颈衔接修复 v0.3.11</small><h1>头颈与领口一体衔接</h1><p>脖环上缘嵌入现有下巴与侧发后方；缩减下缘竖向连接段，让胸口承接领口。保留当前头部轮廓、表情和肩部动画。护板固定在外套，遮住交叠的小臂；护板外的手掌在头发前方轻摆。点击表情后，可继续挥手、跑步、坐下和说话。</p><div class="layout"><section class="panel"><div id="stage"></div><p id="status">载入素材中…</p><div class="row"><button id="pause">暂停</button><button id="reset">回到站立</button><button id="talk">说话</button><button id="listen">倾听</button><button id="reference">原图对照</button></div><label>大小 <input id="size" type="range" min="0.65" max="2" step="0.05" value="1.5"></label><p><small>按住角色拖动，松开可放下或抛出。表情贴图、眉眼、嘴型及 gaze 补边沿用上传包。原图对照展示细化前的原始图片。</small></p></section><aside class="panel"><h2>表情</h2><div id="expressions" class="buttons"></div><h2>动作</h2><div id="motions" class="buttons"></div><p><small>本页引用同目录素材。请通过本地 HTTP 服务打开，详见 README。验证结果见 verification。</small></p></aside></div></main><script type="module">
++</style><main><small>REFERENCE COMPANION · 肩根体量修正 v0.3.12</small><h1>肩根与袖根体量修正</h1><p>近侧使用圆弧实体肩根与局部增厚的袖根；远侧增加较小的深色内撑。保持两侧不对称，并保留头颈连接、头部轮廓、表情和挥手骨链。护板固定在外套，遮住交叠的小臂；护板外的手掌在头发前方轻摆。点击表情后，可继续挥手、跑步、坐下和说话。</p><div class="layout"><section class="panel"><div id="stage"></div><p id="status">载入素材中…</p><div class="row"><button id="pause">暂停</button><button id="reset">回到站立</button><button id="talk">说话</button><button id="listen">倾听</button><button id="reference">原图对照</button></div><label>大小 <input id="size" type="range" min="0.65" max="2" step="0.05" value="1.5"></label><p><small>按住角色拖动，松开可放下或抛出。表情贴图、眉眼、嘴型及 gaze 补边沿用上传包。原图对照展示细化前的原始图片。</small></p></section><aside class="panel"><h2>表情</h2><div id="expressions" class="buttons"></div><h2>动作</h2><div id="motions" class="buttons"></div><p><small>本页引用同目录素材。请通过本地 HTTP 服务打开，详见 README。验证结果见 verification。</small></p></aside></div></main><script type="module">
+ const model=await(await fetch(new URL('./model.json',import.meta.url))).json();
+ const manifest=await(await fetch(new URL('./figure.json',import.meta.url))).json();
+ try{
+--- v0.3.11/README.md
++++ v0.3.12/README.md
+@@ -1,13 +1,11 @@
+-# Reference Companion v0.3.11
++# Reference Companion v0.3.12
+ 
+-入口：`figure.json`。保留全部运行依赖；当前补丁只处理头颈与领口衔接。
++入口：figure.json。当前版本专项增加肩根与袖根的支撑体量，保留v0.3.11的头颈连接。
+ 
+-预览：在本目录执行 `python3 -m http.server 8000`，打开 http://localhost:8000/preview.html 。请通过本地 HTTP 服务载入 ES 模块，不要直接双击 HTML。
++预览：在本目录执行 python3 -m http.server 8000，然后打开 http://localhost:8000/preview.html 。请通过本地HTTP服务载入ES模块。
+ 
+-`collar-connection.js` 以原立绘颈环与中央领口像素重新组装局部运行图集，并用局部网格将脖环下缘接入胸口。两侧仅增加简洁的领口承接底色；原肩部骨链与形变仍由原代码负责。
++新增 shoulder-volume.js：近侧圆弧肩根、远侧较小的深色内撑，以及沿原上臂方向渐退的近端截面增厚。内层轮廓由原生Canvas生成，使用原肩部形变与骨链；没有增加图片运行依赖。
+ 
+-Head 全局比例与位置、头壳轮廓、表情组件、头发、wave 肩肘腕、板甲与外套文件保持原样。所有 PNG 源文件与 v0.3.10 相同；变化发生在局部图集合成与 torso 顶端网格。
++头颈图集、表情、白色板甲、外套、肩肘腕枢轴及动作参数保持v0.3.11设置。验证结果见 verification/shoulder-volume-validation.json；源码差异见 changes.patch。
+ 
+-验证：`verification/neck-connection-validation.json`。软件组件渲染、480 帧几何对照及 120 组表情输出检查通过；未进行 Electron 实机导入验证。
+-
+-角色版权归原作者，代码许可见 LICENSE-AGPL-3.0.txt 与 NOTICE.md。
++已通过480帧软件几何对照与120组表情输出检查，尚未进行Electron实机验收。角色版权归原作者，代码许可见 LICENSE-AGPL-3.0.txt 和 NOTICE.md。
+--- v0.3.11/CHANGELOG.md
++++ v0.3.12/CHANGELOG.md
+@@ -1,13 +1,9 @@
+-# v0.3.11 — 头颈衔接
++# v0.3.12 — 肩根基体量
+ 
+-以 v0.3.10 为基线，修复头、独立薄环、竖直黑色立领三段分离的读法。
++- 近侧小斜片肩根替换为圆弧实体轮廓，增强肩根到袖根的承接。固定窗口内可见承接面积约增加15.3%。
++- 近侧／远侧上臂根部沿外侧法线局部增厚，系数分别0.16／0.10，位移分别不超过9.5／6源坐标像素；内侧与肘部保持原位置。
++- 远侧增加较小的深色袖根内撑，保留两侧服装的不对称。
++- 继续使用原共享肩部形变，肩肘腕枢轴、动作角度与手部轨迹未变。
++- 头颈连接及胸口图集完全相同，181个PNG源文件未改；白色板甲和外套的几何与贴图未改。
+ 
+-- 恢复原立绘的脖环外形与中央领口局部像素，合成时排除头部和肩部皮肤，保留既有头部轮廓与肩部素材。
+-- 脖环顶端局部向下巴与侧发后方嵌入；不移动 Head。
+-- 原图坐标中 y=710..737 的连接区映射到 y=696..708，直接接入上胸。y>=810 与横向作用区以外位移为零。
+-- 增加两块极简 Q 版领口承接底色，埋入原肩部与板甲后方，避免连接处出现空洞；不改变肩部、手臂或外套的绑定。
+-- torso 网格加密为 28×62；其他部件的注册、层级、网格及动画代码不变。
+-
+-181 个 PNG 源文件逐字节不变；未触及表情合成、motion.js、kit/body.js 或 kit/rig.js。480 帧中所有其他部件顶点及肩肘腕坐标与基线一致，120 组表情输出哈希一致，局部颈口网格无翻转。
+-
+-对照使用工程实际组件与生产形变函数，由软件光栅化输出。尚未进行浏览器 GPU 或 Electron 实机验收。
++480帧软件几何对照、120组表情输出检查通过；肩部实心网格无翻转。尚未进行GPU/Electron实机验收。

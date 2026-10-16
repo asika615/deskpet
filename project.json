@@ -1,0 +1,19 @@
+{
+  "project_id": "reference-companion",
+  "workspace": "coopanion-workspace",
+  "baseline_version": "v0.3.11",
+  "current_version": "v0.3.12",
+  "baseline_project": "versions/v0.3.11/reference-companion",
+  "current_project": "versions/v0.3.12/reference-companion",
+  "reference": "references/original.png",
+  "entry": "figure.json",
+  "scope": "Localized shoulder root and sleeve root volume; preserve head-neck, armor, coat and FK",
+  "snapshot": "coopanion-workspace-current.zip",
+  "verified": true,
+  "runtime_lifetime": "Not controlled by project files",
+  "workspace_save_target": {
+    "library_file_id": "libfile_6f0ee61cea1081918fb8bd070e23c341",
+    "file_name": "coopanion-workspace-current.zip",
+    "policy": "Update the same identified workspace item; resolve its current version before replacement."
+  }
+}

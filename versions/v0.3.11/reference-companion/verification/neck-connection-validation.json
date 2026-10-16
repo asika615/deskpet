@@ -1,0 +1,20 @@
+{
+  "version": "0.3.11",
+  "method": "Production figure and expression functions with software kit injection",
+  "frames": 480,
+  "expressionCases": 120,
+  "pngFilesByteUnchanged": 181,
+  "maxUntouchedMeshDelta": 0,
+  "maxShoulderElbowWristDelta": 0,
+  "neckTriangleFoldCount": 0,
+  "outsideFieldSamples": 17496,
+  "headRest": {
+    "scale": 1,
+    "dx": 0,
+    "dy": 0
+  },
+  "limitations": [
+    "Software rasterization is not GPU filtering or antialiasing verification",
+    "Browser/Electron import was not executed: no local Chromium executable available"
+  ]
+}

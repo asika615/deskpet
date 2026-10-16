@@ -1,0 +1,28 @@
+{
+  "near": {
+    "outerCrossSectionSample": 45,
+    "rootExpansionSourcePixels": 7.200000000000007,
+    "innerAnchorOffset": [
+      0,
+      0
+    ],
+    "elbowOffset": [
+      0,
+      0
+    ],
+    "maximumExpansionSourcePixels": 9.5
+  },
+  "far": {
+    "outerCrossSectionSample": 45,
+    "rootExpansionSourcePixels": 4.4999999999999964,
+    "innerAnchorOffset": [
+      0,
+      0
+    ],
+    "elbowOffset": [
+      0,
+      0
+    ],
+    "maximumExpansionSourcePixels": 6
+  }
+}

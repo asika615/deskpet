@@ -1,0 +1,47 @@
+{
+  "note": "Delivery receipts observed on save; resolve current versions before future replacement. Workspace save target remains project.json.",
+  "files": [
+    {
+      "file_name": "reference-companion-v0.3.12-shoulder-volume.zip",
+      "library_file_id": "libfile_c4bfca83e10c81919db99dfd9ced5b16",
+      "file_id": "file_000000007d1081f8a0b09dfe30794275",
+      "observed_version": 0,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/output/reference-companion-v0.3.12-shoulder-volume.zip"
+    },
+    {
+      "file_name": "shoulder-volume-comparison.png",
+      "library_file_id": "libfile_90255e30eb1c819182b6d4912adf97cf",
+      "file_id": "file_00000000477081f58af46d32d05f111e",
+      "observed_version": 0,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/shoulder-volume-comparison.png"
+    },
+    {
+      "file_name": "shoulder-volume-closeup.png",
+      "library_file_id": "libfile_f6f756fa577c8191af07eb74628c8923",
+      "file_id": "file_00000000602c820c95da4923ac60a495",
+      "observed_version": 0,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/shoulder-volume-closeup.png"
+    },
+    {
+      "file_name": "shoulder-volume-three-poses.png",
+      "library_file_id": "libfile_45f765bf2ab881919abf87401e168872",
+      "file_id": "file_0000000084d881f7961cfdb7fd89bf38",
+      "observed_version": 0,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/shoulder-volume-three-poses.png"
+    },
+    {
+      "file_name": "shoulder-volume-structure.png",
+      "library_file_id": "libfile_03739e35999c8191a78c149739656de9",
+      "file_id": "file_0000000039a081f8a53f4290a0697520",
+      "observed_version": 0,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/review/shoulder-volume-structure.png"
+    },
+    {
+      "file_name": "REPORT.md",
+      "library_file_id": "libfile_460924e4659881919886fccd32bfb72a",
+      "file_id": "file_000000007af4820cab7da366d4fb8896",
+      "observed_version": 1,
+      "local_path": "/workspace/scratch/4ac617db6238/coopanion-workspace/REPORT.md"
+    }
+  ]
+}
