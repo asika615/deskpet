@@ -1,0 +1,329 @@
+--- a/figure.js
++++ b/figure.js
+@@ -3,8 +3,8 @@
+  */
+ import { motionDriver } from './motion.js';
+ import { createExpressionBridge } from './expression-bridge.js';
+-import { createCollarConnection, assembleConnectedTorso } from './collar-connection.js';
+-import { shoulderVolumeOffset, makeShoulderFoundation } from './shoulder-volume.js';
++import { createCollarConnection, assembleConnectedTorso, collarOffset } from './collar-connection.js';
++import { makeReferenceShoulder, makeShoulderLining } from './reference-shoulder.js';
+ const NS='http://www.w3.org/2000/svg';
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const smooth=(a,b,x)=>{let k=clamp((x-a)/(b-a),0,1);return k*k*(3-2*k);};
+@@ -19,8 +19,8 @@
+  const faceCanvas=bridge.canvas,faceContext=bridge.context;
+  const textures={};await Promise.all(model.parts.filter(p=>!p.procedural).map(async p=>{textures[p.tex]=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))(p.file));}));
+  const make=opts.createCanvas??((w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;});
+- textures.waveShoulderSkin=makeShoulderFoundation('near',make).canvas;
+- textures.farShoulderFoundation=makeShoulderFoundation('far',make).canvas;
++ textures.waveShoulderSkin=makeReferenceShoulder(source,make).canvas;
++ textures.shoulderSocketLining=makeShoulderLining(make).canvas;
+  const torsoPart=model.parts.find(p=>p.id==='torso');
+  const neckHeadMatte=await(opts.loadImage??imageLoad)((opts.asset??(p=>new URL(p,base)))('reference-head-matte.png'));
+  textures[torsoPart.tex]=assembleConnectedTorso(source,neckHeadMatte,textures[torsoPart.tex],torsoPart.sourceBox,
+@@ -36,11 +36,11 @@
+   neck:{kind:'rot',parent:'waist',pivot:PV.neck},
+   armNear:{kind:'rot',parent:'body',pivot:PV.armNear},
+   armFar:{kind:'rot',parent:'body',pivot:PV.armFar},
+-  farShoulderVolume:{kind:'warp',parent:'armFar',rect:[U(750),V(700),U(845),V(825)]},
+   rightArmSocket:{kind:'rot',parent:'body',pivot:PV.rightShoulder},
+   waveUpperJoint:{kind:'rot',parent:'body',pivot:PV.waveShoulder},
+   waveSleeveRoot:{kind:'warp',parent:'waveUpperJoint',rect:[U(395),V(700),U(715),V(1070)]},
+-  shoulderSkinBridge:{kind:'warp',parent:'body',rect:[U(580),V(704),U(676),V(790)]},
++  shoulderSkinBridge:{kind:'warp',parent:'body',rect:[U(580),V(688),U(674),V(788)]},
++  shoulderLiningBridge:{kind:'warp',parent:'body',rect:[U(568),V(728),U(675),V(795)]},
+   waveElbowJoint:{kind:'rot',parent:'waveUpperJoint',pivot:PV.waveElbow},
+   waveWristJoint:{kind:'rot',parent:'waveElbowJoint',pivot:PV.waveWrist},
+   forearmNear:{kind:'rot',parent:'armNear',pivot:PV.elbowNear},
+@@ -103,9 +103,6 @@
+  function draw(g,fc,o) {
+   if(mounted!==g||!g.contains(fo))mount(g);
+   const r=driver.update(fc,o),st=r.st;
+-  st.farShoulderVolume={fn:(u,v,x,y)=>{
+-   const q=shoulderVolumeOffset((x-128)/S+X0,(y-256)/S+FEET,'far',model);return[q[0]*S,q[1]*S];
+-  }};
+   st.collarConnection=createCollarConnection(model.units);
+   st.clothes={fn:(u,v,x,y)=>{
+    const a=(st.waist.a||0)*Math.PI/180*(1-smooth(V(936),V(1190),y)),c=Math.cos(a),s=Math.sin(a),dx=x-PV.waist[0],dy=y-PV.waist[1];
+@@ -143,17 +140,37 @@
+   // the existing arm FK. Only mesh vertices change: no joint, timing or plate moves.
+   const armDx=PV.waveElbow[0]-rx,armDy=PV.waveElbow[1]-ry,armLength=Math.hypot(armDx,armDy);
+   const ax=armDx/armLength,ay=armDy/armLength;
+-  function shoulderTarget(x,y) {
+-   const volume=shoulderVolumeOffset((x-128)/S+X0,(y-256)/S+FEET,'near',model);
+-   x+=volume[0]*S;y+=volume[1]*S;
++  function shoulderTarget(x,y,clothOnly=false) {
++   // Register only the two buried contacts: the upper edge meets the existing
++   // corrected collar, and the outer notch follows the existing face curl.
++   // The sleeve lip and both fields share these coordinates; FK is untouched.
++   const headW=(1-smooth(U(612),U(642),x))*(1-smooth(V(735),V(755),y));
++   const collarW=smooth(U(610),U(624),x)*(1-smooth(V(709),V(733),y))*(1-headW);
++   const cq=collarOffset((x-128)/S+X0,(y-256)/S+FEET);
++   let hx=x,hy=y;
++   if(headW>0){
++    const hd=nodeDefs.headMid.rect,hq=st.headMid.fn(clamp((x-hd[0])/(hd[2]-hd[0]),0,1),clamp((y-hd[1])/(hd[3]-hd[1]),0,1),x,y);
++    hx+=hq[0];hy+=hq[1];
++    for(const node of ['neck','waist']){
++     const p=st[node],pv=nodeDefs[node].pivot,a=(p.a||0)*Math.PI/180,c=Math.cos(a),s=Math.sin(a),dx=hx-pv[0],dy=hy-pv[1];
++     hx=pv[0]+(p.tx||0)+dx*c-dy*s;hy=pv[1]+(p.ty||0)+dx*s+dy*c;
++    }
++   }
+    const dx=x-rx,dy=y-ry,along=dx*ax+dy*ay,outer=-dx*ay+dy*ax;
+-   const w=smooth(5*S,110*S,along+.2*outer);
++   const w=clothOnly?0:smooth(5*S,110*S,along+.2*outer);
+    const a=st.waveUpperJoint.a*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+    const q=st.clothes.fn(clamp((x-rr[0])/(rr[2]-rr[0]),0,1),clamp((y-rr[1])/(rr[3]-rr[1]),0,1),x,y);
+    const rigidX=rx+rq[0]+dx*c-dy*s,rigidY=ry+rq[1]+dx*s+dy*c;
+-   return [(x+q[0])*(1-w)+rigidX*w,(y+q[1])*(1-w)+rigidY*w];
++   const bx=(x+q[0])*(1-w)+rigidX*w,by=(y+q[1])*(1-w)+rigidY*w;
++   const cx=x+cq[0]*S,cy=y+cq[1]*S;
++   const cloth=st.clothes.fn(clamp((cx-rr[0])/(rr[2]-rr[0]),0,1),clamp((cy-rr[1])/(rr[3]-rr[1]),0,1),cx,cy);
++   return [bx*(1-headW-collarW)+hx*headW+(cx+cloth[0])*collarW,
++    by*(1-headW-collarW)+hy*headW+(cy+cloth[1])*collarW];
+   }
+   st.shoulderSkinBridge={fn:(u,v,x,y)=>{const q=shoulderTarget(x,y);return[q[0]-x,q[1]-y];}};
++  // The underlap meets the fixed plate, so its lower edge follows clothes,
++  // not the rotating arm. Its upper hair contact shares the same registration.
++  st.shoulderLiningBridge={fn:(u,v,x,y)=>{const q=shoulderTarget(x,y,true);return[q[0]-x,q[1]-y];}};
+   st.waveSleeveRoot={fn:(u,v,x,y)=>{
+    const q=shoulderTarget(x,y),a=-st.waveUpperJoint.a*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+    const dx=q[0]-rx-rq[0],dy=q[1]-ry-rq[1];
+--- a/model.json
++++ b/model.json
+@@ -394,7 +394,7 @@
+       "id": "armR",
+       "tex": "armR",
+       "file": "tex/armR.png",
+-      "parent": "farShoulderVolume",
++      "parent": "armFar",
+       "z": 1.6,
+       "sourceBox": [
+         755,
+@@ -512,23 +512,22 @@
+       "z": 4.95,
+       "sourceBox": [
+         580,
+-        704,
+-        676,
+-        790
++        688,
++        674,
++        788
+       ],
+       "box": [
+         109.7,
+-        155.53300000000002,
+-        17.567999999999998,
+-        15.738
+-      ],
+-      "grid": [
+-        20,
+-        18
++        152.60500000000002,
++        17.201999999999998,
++        18.3
++      ],
++      "grid": [
++        47,
++        50
+       ],
+       "procedural": true,
+-      "generator": "shoulder-volume.js:near",
+-      "referenceTexture": "tex/shoulderChibi.png"
++      "generator": "reference-shoulder.js:original pixels"
+     },
+     {
+       "id": "waveUpper",
+@@ -626,28 +625,28 @@
+       "occludeBy": "floatingPlate"
+     },
+     {
+-      "id": "farShoulderFoundation",
+-      "tex": "farShoulderFoundation",
++      "id": "shoulderSocketLining",
++      "tex": "shoulderSocketLining",
+       "procedural": true,
+-      "generator": "shoulder-volume.js:far",
+-      "sourceBox": [
+-        759,
+-        701,
+-        826,
+-        790
+-      ],
+-      "box": [
+-        142.457,
+-        154.984,
+-        12.261,
+-        16.287
+-      ],
+-      "parent": "farShoulderVolume",
+-      "grid": [
+-        20,
+-        18
+-      ],
+-      "z": 1.59
++      "generator": "reference-shoulder.js:lining",
++      "sourceBox": [
++        568,
++        728,
++        675,
++        795
++      ],
++      "box": [
++        107.504,
++        159.925,
++        19.581,
++        12.261
++      ],
++      "parent": "shoulderLiningBridge",
++      "grid": [
++        54,
++        34
++      ],
++      "z": 4.8
+     }
+   ],
+   "shoulderAttachments": {
+@@ -863,19 +862,17 @@
+     "scope": "Torso neckline only: upper source ROI y<770; displacement field x575..840 and y<810; lower torso and all other parts unchanged at their original registration",
+     "art": "Original collar and central neckline pixels assembled at runtime; minimal flat skin backing under existing shoulders"
+   },
+-  "shoulderVolumeRepair": {
+-    "method": "Local proximal cross-section growth and opaque Q-style foundation caps",
+-    "nearGain": 0.16,
+-    "farGain": 0.1,
+-    "nearMaxSourcePixels": 9.5,
+-    "farMaxSourcePixels": 6,
+-    "preserved": [
+-      "head-neck atlas",
+-      "torso",
+-      "joint pivots and angles",
+-      "white plate",
+-      "coat",
+-      "forearm/wrist/hand"
+-    ]
++  "shoulderShapeRepair": {
++    "reference": "original.png",
++    "sourceBox": [
++      580,
++      688,
++      674,
++      788
++    ],
++    "method": "Original visible shoulder pixels; no painted cap or cross-section growth. Retains shared sleeve-root skinning.",
++    "rollback": "v0.3.12 near/far growth and procedural foundation contours removed; sleeve and far-arm geometry restored to v0.3.11.",
++    "protected": "Head/neck, face, motion.js, pivots, white plate, torso and coat unchanged.",
++    "minimalSplit": "Visible original-pixel shoulder and a dark underlap below existing sleeve/plate; removes duplicate torso skin backing. Upper reference edge locally registered to existing collar and face curl."
+   }
+ }
+--- a/collar-connection.js
++++ b/collar-connection.js
+@@ -69,10 +69,9 @@
+   // Buried ends extend under the current shoulder sprite and white plate.
+   g.save();g.globalCompositeOperation='destination-over';g.translate(-x0,-y0);
+   g.fillStyle='#ffe3d3';
+-  g.beginPath();g.moveTo(613,704);
+-  g.bezierCurveTo(627,707,645,714,657,730);
+-  g.lineTo(648,779);g.lineTo(602,760);
+-  g.bezierCurveTo(594,746,601,721,613,704);g.closePath();g.fill();
++  // Near-side backing is now separated into the reference shoulder layer.
++  // The collar/chest pixels above are unchanged; do not paint a second skin
++  // silhouette over that layer. Far-side neckline support stays as before.
+   g.beginPath();g.moveTo(766,707);
+   g.bezierCurveTo(779,710,790,727,798,745);
+   g.lineTo(785,763);g.lineTo(769,736);g.closePath();g.fill();
+--- /dev/null
++++ b/reference-shoulder.js
+@@ -0,0 +1,36 @@
++/** Visible shoulder sampled from original.png at its original registration.
++ * The path only separates the existing skin from hair, bodice and fixed armor.
++ * It draws no new skin pixels, highlights or ink. Hair/collar/armor retain their
++ * own foreground masks. The shared sleeve-root field handles the buried join.
++ */
++export const REFERENCE_SHOULDER_BOX = Object.freeze([580,688,674,788]);
++
++// The lining bridges only the space behind the existing plate and sleeve lip.
++// It carries no skin or outline and does not change the fixed armor silhouette.
++export const SHOULDER_LINING_BOX = Object.freeze([568,728,675,795]);
++export function makeShoulderLining(make) {
++  const [x0,y0,x1,y1]=SHOULDER_LINING_BOX;
++  const canvas=make(x1-x0,y1-y0),g=canvas.getContext('2d');
++  g.translate(-x0,-y0);g.fillStyle='#211a19';
++  g.beginPath();g.moveTo(570,732);
++  g.bezierCurveTo(580,733,587,735,593,737);g.lineTo(641,761);
++  g.lineTo(644,776);g.lineTo(635,768);
++  g.bezierCurveTo(620,758,600,755,585,751);g.lineTo(570,747);
++  g.closePath();g.fill();return{canvas,sourceBox:SHOULDER_LINING_BOX};
++}
++export function makeReferenceShoulder(source, make) {
++  const [x0,y0,x1,y1] = REFERENCE_SHOULDER_BOX;
++  const canvas = make(x1-x0,y1-y0), g = canvas.getContext('2d');
++  g.save();g.translate(-x0,-y0);
++  // Keep the original hair-side antialias and ink at the buried contact, too.
++  // The distal point lies behind the unchanged plate. No replacement ink seam.
++  // Include the full original dark hair/shoulder contact, not a detached
++  // skin-only cutout. Head/collar are in front, so their source pixels overlap.
++  g.beginPath();g.moveTo(580,688);g.lineTo(674,688);
++  g.lineTo(674,742);g.lineTo(643,773);
++  g.lineTo(640,763);g.lineTo(635,758);
++  g.lineTo(638,746);g.lineTo(631,755);g.lineTo(580,733);
++  g.closePath();g.clip();
++  g.drawImage(source,0,0);g.restore();
++  return {canvas,sourceBox:REFERENCE_SHOULDER_BOX};
++}
+--- a/shoulder-volume.js
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/** Shoulder base volume, in original artwork coordinates.
+- * The inner anchors and distal arm stay put; only the proximal cross section
+- * grows. These fields run before the existing shared shoulder skinning/FK.
+- */
+-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+-const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t);};
+-export const SHOULDER_VOLUME=Object.freeze({
+-  near:{gain:.16,max:9.5,along:[-78,-28,60,115]},
+-  far:{gain:.10,max:6,along:[-68,-22,55,112]},
+-  note:'Asymmetric inner shoulder supports; armor, torso scale and joint pivots unchanged',
+-});
+-
+-export function shoulderVolumeOffset(x,y,side,model){
+-  const {S,X0,FEET}=model.units;
+-  const toSource=p=>[(p[0]-128)/S+X0,(p[1]-256)/S+FEET];
+-  const p=toSource(model.pivots[side==='near'?'waveShoulder':'armFar']);
+-  const e=toSource(model.pivots[side==='near'?'waveElbow':'elbowFar']);
+-  const l=Math.hypot(e[0]-p[0],e[1]-p[1]),ax=(e[0]-p[0])/l,ay=(e[1]-p[1])/l;
+-  const nx=side==='near'?-ay:ay,ny=side==='near'?ax:-ax;
+-  const dx=x-p[0],dy=y-p[1],along=dx*ax+dy*ay,outer=dx*nx+dy*ny;
+-  const c=SHOULDER_VOLUME[side];
+-  const w=smooth(c.along[0],c.along[1],along)*(1-smooth(c.along[2],c.along[3],along));
+-  const amount=Math.min(c.max,Math.max(0,outer)*c.gain)*w*smooth(0,14,outer);
+-  return[nx*amount,ny*amount];
+-}
+-
+-/** Editable Q-style foundation contours. They form actual opaque support
+- * under the original shoulder/sleeve sprites, not a blurred seam overlay.
+- * Near: rounded skin cap, buried into the bodice and under the white plate.
+- * Far: smaller dark inner sleeve cap, preserving the outfit's asymmetry.
+- */
+-export function makeShoulderFoundation(side,make){
+-  const box=side==='near'?[580,704,676,790]:[759,701,826,790];
+-  const [x0,y0,x1,y1]=box,c=make(x1-x0,y1-y0),g=c.getContext('2d');
+-  g.translate(-x0,-y0);g.lineJoin='round';g.lineWidth=1.8;
+-  if(side==='near'){
+-    g.fillStyle='#ffe3d3';g.strokeStyle='#2a1710';
+-    g.beginPath();g.moveTo(653,718);
+-    g.bezierCurveTo(634,711,612,716,601,729);
+-    g.bezierCurveTo(593,739,591,751,597,762);
+-    g.lineTo(616,779);g.bezierCurveTo(637,781,655,765,662,744);
+-    g.lineTo(653,718);g.closePath();g.fill();g.stroke();
+-  }else{
+-    g.fillStyle='#343338';g.strokeStyle='#1f1410';
+-    g.beginPath();g.moveTo(776,715);
+-    g.bezierCurveTo(790,708,805,721,813,737);
+-    g.bezierCurveTo(820,752,812,770,799,780);
+-    g.lineTo(777,772);g.lineTo(765,747);
+-    g.bezierCurveTo(764,734,768,722,776,715);g.closePath();g.fill();g.stroke();
+-  }
+-  return{canvas:c,sourceBox:box};
+-}

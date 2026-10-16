@@ -1,0 +1,30 @@
+{
+  "version": "v0.3.13",
+  "baseline": "v0.3.12",
+  "method": "Production figure and textures, deterministic software rig",
+  "motionFrames": 480,
+  "expressionCases": 120,
+  "unchangedPngFiles": 181,
+  "protectedMeshVerticesIdentical": true,
+  "shoulderElbowWristCoordinatesIdentical": true,
+  "expressionOutputsIdentical": true,
+  "opaqueShoulderFoldCount": 0,
+  "torsoFoldCount": 0,
+  "maxSharedShoulderFieldError": 6.355287432313019e-14,
+  "collarDeformerSamplesIdentical": 28236,
+  "torsoChanges": {
+    "pixels": 3123,
+    "bounds": [
+      598,
+      704,
+      656,
+      778
+    ],
+    "scope": "Only removal of the old near-shoulder skin backing; original collar, chest and dark garment pixels retained"
+  },
+  "publicCommandsUnchanged": 37,
+  "limitations": [
+    "Software rendering; browser/GPU and Electron import not verified",
+    "Original plate and current refined plate upper edges differ; a narrow dark underlap connects the retained plate without enlarging skin"
+  ]
+}

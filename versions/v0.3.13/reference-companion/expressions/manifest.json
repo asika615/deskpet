@@ -1,0 +1,1508 @@
+{
+  "schema": "expression-component-controller/2",
+  "status": "standalone expression components; not a Coopanion body/import package",
+  "canvas": [
+    1188,
+    924
+  ],
+  "scale": 4,
+  "reference_face_centers": {
+    "leftIris": [
+      612,
+      585
+    ],
+    "rightIris": [
+      804,
+      580
+    ]
+  },
+  "base": "base.png",
+  "faceMask": "face-mask.png",
+  "expressions": {
+    "neutral": {
+      "brows": "layers/neutral/brows.png",
+      "eyes": "layers/neutral/eyes.png",
+      "mouth": "layers/neutral/mouth.png",
+      "blush": "layers/neutral/blush.png",
+      "fx": "layers/neutral/fx.png",
+      "combined": "composites/neutral.png",
+      "browsVisible": false,
+      "mouthClear": "layers/neutral/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "happy": {
+      "brows": "layers/happy/brows.png",
+      "eyes": "layers/happy/eyes.png",
+      "mouth": "layers/happy/mouth.png",
+      "blush": "layers/happy/blush.png",
+      "fx": "layers/happy/fx.png",
+      "combined": "composites/happy.png",
+      "browsVisible": true,
+      "mouthClear": "layers/happy/mouth-clear.png",
+      "eyeMode": "special",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "wink": {
+      "brows": "layers/wink/brows.png",
+      "eyes": "layers/wink/eyes.png",
+      "mouth": "layers/wink/mouth.png",
+      "blush": "layers/wink/blush.png",
+      "fx": "layers/wink/fx.png",
+      "combined": "composites/wink.png",
+      "browsVisible": true,
+      "mouthClear": "layers/wink/mouth-clear.png",
+      "eyeMode": "special",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "love": {
+      "brows": "layers/love/brows.png",
+      "eyes": "layers/love/eyes.png",
+      "mouth": "layers/love/mouth.png",
+      "blush": "layers/love/blush.png",
+      "fx": "layers/love/fx.png",
+      "combined": "composites/love.png",
+      "browsVisible": true,
+      "mouthClear": "layers/love/mouth-clear.png",
+      "eyeMode": "special",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "shy": {
+      "brows": "layers/shy/brows.png",
+      "eyes": "layers/shy/eyes.png",
+      "mouth": "layers/shy/mouth.png",
+      "blush": "layers/shy/blush.png",
+      "fx": "layers/shy/fx.png",
+      "combined": "composites/shy.png",
+      "browsVisible": false,
+      "mouthClear": "layers/shy/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.87,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "surprised": {
+      "brows": "layers/surprised/brows.png",
+      "eyes": "layers/surprised/eyes.png",
+      "mouth": "layers/surprised/mouth.png",
+      "blush": "layers/surprised/blush.png",
+      "fx": "layers/surprised/fx.png",
+      "combined": "composites/surprised.png",
+      "browsVisible": true,
+      "mouthClear": "layers/surprised/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "eyeScaleY": 1.18
+    },
+    "angry": {
+      "brows": "layers/angry/brows.png",
+      "eyes": "layers/angry/eyes.png",
+      "mouth": "layers/angry/mouth.png",
+      "blush": "layers/angry/blush.png",
+      "fx": "layers/angry/fx.png",
+      "combined": "composites/angry.png",
+      "browsVisible": true,
+      "mouthClear": "layers/angry/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.7,
+      "tilt": 0.12,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "sad": {
+      "brows": "layers/sad/brows.png",
+      "eyes": "layers/sad/eyes.png",
+      "mouth": "layers/sad/mouth.png",
+      "blush": "layers/sad/blush.png",
+      "fx": "layers/sad/fx.png",
+      "combined": "composites/sad.png",
+      "browsVisible": true,
+      "mouthClear": "layers/sad/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.86,
+      "tilt": -0.03,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "sleepy": {
+      "brows": "layers/sleepy/brows.png",
+      "eyes": "layers/sleepy/eyes.png",
+      "mouth": "layers/sleepy/mouth.png",
+      "blush": "layers/sleepy/blush.png",
+      "fx": "layers/sleepy/fx.png",
+      "combined": "composites/sleepy.png",
+      "browsVisible": false,
+      "mouthClear": "layers/sleepy/mouth-clear.png",
+      "eyeMode": "special",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "thinking": {
+      "brows": "layers/thinking/brows.png",
+      "eyes": "layers/thinking/eyes.png",
+      "mouth": "layers/thinking/mouth.png",
+      "blush": "layers/thinking/blush.png",
+      "fx": "layers/thinking/fx.png",
+      "combined": "composites/thinking.png",
+      "browsVisible": true,
+      "mouthClear": "layers/thinking/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.87,
+      "tilt": 0,
+      "gaze": [
+        -0.6,
+        0
+      ]
+    },
+    "smug": {
+      "brows": "layers/smug/brows.png",
+      "eyes": "layers/smug/eyes.png",
+      "mouth": "layers/smug/mouth.png",
+      "blush": "layers/smug/blush.png",
+      "fx": "layers/smug/fx.png",
+      "combined": "composites/smug.png",
+      "browsVisible": true,
+      "mouthClear": "layers/smug/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.9,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "browCrop": [
+        500,
+        470,
+        400,
+        50
+      ]
+    },
+    "pout": {
+      "brows": "layers/pout/brows.png",
+      "eyes": "layers/pout/eyes.png",
+      "mouth": "layers/pout/mouth.png",
+      "blush": "layers/pout/blush.png",
+      "fx": "layers/pout/fx.png",
+      "combined": "composites/pout.png",
+      "browsVisible": true,
+      "mouthClear": "layers/pout/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.88,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "worried": {
+      "brows": "layers/worried/brows.png",
+      "eyes": "layers/worried/eyes.png",
+      "mouth": "layers/worried/mouth.png",
+      "blush": "layers/worried/blush.png",
+      "fx": "layers/worried/fx.png",
+      "combined": "composites/worried.png",
+      "browsVisible": true,
+      "mouthClear": "layers/worried/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.91,
+      "tilt": -0.02,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "determined": {
+      "brows": "layers/determined/brows.png",
+      "eyes": "layers/determined/eyes.png",
+      "mouth": "layers/determined/mouth.png",
+      "blush": "layers/determined/blush.png",
+      "fx": "layers/determined/fx.png",
+      "combined": "composites/determined.png",
+      "browsVisible": true,
+      "mouthClear": "layers/determined/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.75,
+      "tilt": 0.1,
+      "gaze": [
+        0,
+        0
+      ]
+    },
+    "flustered": {
+      "brows": "layers/flustered/brows.png",
+      "eyes": "layers/flustered/eyes.png",
+      "mouth": "layers/flustered/mouth.png",
+      "blush": "layers/flustered/blush.png",
+      "fx": "layers/flustered/fx.png",
+      "combined": "composites/flustered.png",
+      "browsVisible": true,
+      "mouthClear": "layers/flustered/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "eyeScaleY": 1.18
+    },
+    "scared": {
+      "brows": "layers/scared/brows.png",
+      "eyes": "layers/scared/eyes.png",
+      "mouth": "layers/scared/mouth.png",
+      "blush": "layers/scared/blush.png",
+      "fx": "layers/scared/fx.png",
+      "combined": "composites/scared.png",
+      "browsVisible": true,
+      "mouthClear": "layers/scared/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "eyeScaleY": 1.18,
+      "browOffsetY": -26
+    },
+    "excited": {
+      "brows": "layers/excited/brows.png",
+      "eyes": "layers/excited/eyes.png",
+      "mouth": "layers/excited/mouth.png",
+      "blush": "layers/excited/blush.png",
+      "fx": "layers/excited/fx.png",
+      "combined": "composites/excited.png",
+      "browsVisible": true,
+      "mouthClear": "layers/excited/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "eyeScaleY": 1.18,
+      "eyeOverlay": "layers/excited/iris-stars.png",
+      "overlayFollowsGaze": true
+    },
+    "cry": {
+      "brows": "layers/cry/brows.png",
+      "eyes": "layers/cry/eyes.png",
+      "mouth": "layers/cry/mouth.png",
+      "blush": "layers/cry/blush.png",
+      "fx": "layers/cry/fx.png",
+      "combined": "composites/cry.png",
+      "browsVisible": true,
+      "mouthClear": "layers/cry/mouth-clear.png",
+      "eyeMode": "closed-cry",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ],
+      "eyeLashes": "layers/happy/eyes.png",
+      "eyeOverlay": "layers/cry/eye-tears.png",
+      "eyeOverlayOffsetY": -8
+    },
+    "confused": {
+      "brows": "layers/confused/brows.png",
+      "eyes": "layers/confused/eyes.png",
+      "mouth": "layers/confused/mouth.png",
+      "blush": "layers/confused/blush.png",
+      "fx": "layers/confused/fx.png",
+      "combined": "composites/confused.png",
+      "browsVisible": true,
+      "mouthClear": "layers/confused/mouth-clear.png",
+      "eyeMode": "normal",
+      "openness": 0.89,
+      "tilt": 0,
+      "gaze": [
+        0.35,
+        0
+      ]
+    },
+    "sleep": {
+      "brows": "layers/sleep/brows.png",
+      "eyes": "layers/sleep/eyes.png",
+      "mouth": "layers/sleep/mouth.png",
+      "blush": "layers/sleep/blush.png",
+      "fx": "layers/sleep/fx.png",
+      "combined": "composites/sleep.png",
+      "browsVisible": true,
+      "mouthClear": "layers/sleep/mouth-clear.png",
+      "eyeMode": "special",
+      "openness": 1,
+      "tilt": 0,
+      "gaze": [
+        0,
+        0
+      ]
+    }
+  },
+  "normalBase": "normal-base.png",
+  "eyeClear": "normal-eye-clear.png",
+  "normalEyes": [
+    {
+      "side": "left",
+      "rect": [
+        518,
+        519,
+        682,
+        638
+      ],
+      "polygon": [
+        [
+          532,
+          548
+        ],
+        [
+          539,
+          542
+        ],
+        [
+          661,
+          538
+        ],
+        [
+          670,
+          548
+        ],
+        [
+          668,
+          569
+        ],
+        [
+          658,
+          596
+        ],
+        [
+          642,
+          617
+        ],
+        [
+          623,
+          627
+        ],
+        [
+          592,
+          630
+        ],
+        [
+          568,
+          619
+        ],
+        [
+          551,
+          598
+        ],
+        [
+          541,
+          578
+        ]
+      ],
+      "lidTop": 535,
+      "lidDepth": 76,
+      "sclera": "normal/left/sclera.png",
+      "iris": "normal/left/iris.png",
+      "lashes": "normal/left/lashes.png",
+      "aperture": "normal/left/aperture.png",
+      "faceClip": "normal/left/face-clip.png",
+      "irisBounds": [
+        571,
+        550,
+        653,
+        620
+      ],
+      "irisUpperFill": [
+        [
+          55,
+          55,
+          45,
+          37,
+          41
+        ],
+        [
+          56,
+          56,
+          41,
+          36,
+          40
+        ],
+        [
+          57,
+          57,
+          41,
+          36,
+          41
+        ],
+        [
+          58,
+          58,
+          41,
+          36,
+          41
+        ],
+        [
+          59,
+          59,
+          41,
+          36,
+          41
+        ],
+        [
+          60,
+          60,
+          41,
+          36,
+          40
+        ],
+        [
+          61,
+          61,
+          40,
+          35,
+          39
+        ],
+        [
+          62,
+          62,
+          39,
+          34,
+          38
+        ],
+        [
+          63,
+          63,
+          39,
+          34,
+          38
+        ],
+        [
+          64,
+          64,
+          38,
+          33,
+          37
+        ],
+        [
+          65,
+          65,
+          38,
+          33,
+          37
+        ],
+        [
+          66,
+          66,
+          38,
+          33,
+          37
+        ],
+        [
+          67,
+          67,
+          38,
+          33,
+          37
+        ],
+        [
+          68,
+          68,
+          38,
+          33,
+          37
+        ],
+        [
+          69,
+          69,
+          38,
+          33,
+          37
+        ],
+        [
+          70,
+          70,
+          38,
+          33,
+          37
+        ],
+        [
+          71,
+          71,
+          38,
+          33,
+          37
+        ],
+        [
+          72,
+          72,
+          38,
+          33,
+          37
+        ],
+        [
+          73,
+          73,
+          38,
+          33,
+          37
+        ],
+        [
+          74,
+          74,
+          38,
+          33,
+          37
+        ],
+        [
+          75,
+          75,
+          38,
+          33,
+          37
+        ],
+        [
+          76,
+          76,
+          38,
+          33,
+          37
+        ],
+        [
+          77,
+          77,
+          37,
+          32,
+          36
+        ],
+        [
+          78,
+          78,
+          37,
+          32,
+          36
+        ],
+        [
+          79,
+          79,
+          37,
+          32,
+          36
+        ],
+        [
+          80,
+          80,
+          37,
+          32,
+          36
+        ],
+        [
+          81,
+          81,
+          37,
+          32,
+          36
+        ],
+        [
+          82,
+          82,
+          37,
+          32,
+          36
+        ],
+        [
+          83,
+          83,
+          37,
+          32,
+          36
+        ],
+        [
+          84,
+          84,
+          37,
+          32,
+          36
+        ],
+        [
+          85,
+          85,
+          37,
+          32,
+          36
+        ],
+        [
+          86,
+          86,
+          37,
+          32,
+          36
+        ],
+        [
+          87,
+          87,
+          37,
+          32,
+          36
+        ],
+        [
+          88,
+          88,
+          37,
+          32,
+          36
+        ],
+        [
+          89,
+          89,
+          37,
+          32,
+          36
+        ],
+        [
+          90,
+          90,
+          36,
+          31,
+          35
+        ],
+        [
+          91,
+          91,
+          36,
+          31,
+          35
+        ],
+        [
+          92,
+          92,
+          36,
+          31,
+          35
+        ],
+        [
+          93,
+          93,
+          36,
+          31,
+          35
+        ],
+        [
+          94,
+          94,
+          36,
+          31,
+          35
+        ],
+        [
+          95,
+          95,
+          36,
+          31,
+          35
+        ],
+        [
+          96,
+          96,
+          36,
+          31,
+          35
+        ],
+        [
+          97,
+          97,
+          36,
+          31,
+          35
+        ],
+        [
+          98,
+          98,
+          35,
+          30,
+          34
+        ],
+        [
+          99,
+          99,
+          35,
+          30,
+          34
+        ],
+        [
+          100,
+          100,
+          35,
+          30,
+          34
+        ],
+        [
+          101,
+          101,
+          35,
+          30,
+          34
+        ],
+        [
+          102,
+          102,
+          35,
+          30,
+          34
+        ],
+        [
+          103,
+          103,
+          35,
+          30,
+          34
+        ],
+        [
+          104,
+          104,
+          35,
+          30,
+          34
+        ],
+        [
+          105,
+          105,
+          35,
+          30,
+          34
+        ],
+        [
+          106,
+          106,
+          35,
+          30,
+          34
+        ],
+        [
+          107,
+          107,
+          35,
+          30,
+          34
+        ],
+        [
+          108,
+          108,
+          35,
+          30,
+          34
+        ],
+        [
+          109,
+          109,
+          35,
+          30,
+          34
+        ],
+        [
+          110,
+          110,
+          35,
+          30,
+          34
+        ],
+        [
+          111,
+          111,
+          35,
+          30,
+          34
+        ],
+        [
+          112,
+          112,
+          35,
+          30,
+          34
+        ],
+        [
+          113,
+          113,
+          35,
+          30,
+          34
+        ],
+        [
+          114,
+          114,
+          35,
+          30,
+          34
+        ],
+        [
+          115,
+          115,
+          35,
+          30,
+          34
+        ],
+        [
+          116,
+          116,
+          35,
+          30,
+          34
+        ],
+        [
+          117,
+          117,
+          34,
+          30,
+          34
+        ],
+        [
+          118,
+          118,
+          34,
+          30,
+          34
+        ],
+        [
+          119,
+          119,
+          34,
+          30,
+          34
+        ],
+        [
+          120,
+          120,
+          34,
+          30,
+          35
+        ],
+        [
+          121,
+          121,
+          34,
+          30,
+          34
+        ],
+        [
+          122,
+          122,
+          34,
+          30,
+          34
+        ],
+        [
+          123,
+          123,
+          34,
+          30,
+          34
+        ],
+        [
+          124,
+          124,
+          35,
+          30,
+          34
+        ],
+        [
+          125,
+          125,
+          35,
+          30,
+          34
+        ],
+        [
+          126,
+          126,
+          35,
+          30,
+          34
+        ],
+        [
+          127,
+          127,
+          35,
+          30,
+          34
+        ],
+        [
+          128,
+          128,
+          35,
+          30,
+          34
+        ],
+        [
+          129,
+          129,
+          35,
+          30,
+          34
+        ],
+        [
+          130,
+          130,
+          35,
+          30,
+          34
+        ],
+        [
+          131,
+          131,
+          34,
+          29,
+          33
+        ],
+        [
+          132,
+          132,
+          33,
+          29,
+          33
+        ],
+        [
+          133,
+          131,
+          35,
+          30,
+          34
+        ]
+      ]
+    },
+    {
+      "side": "right",
+      "rect": [
+        750,
+        512,
+        896,
+        638
+      ],
+      "polygon": [
+        [
+          767,
+          545
+        ],
+        [
+          809,
+          535
+        ],
+        [
+          870,
+          531
+        ],
+        [
+          877,
+          543
+        ],
+        [
+          869,
+          563
+        ],
+        [
+          859,
+          590
+        ],
+        [
+          844,
+          610
+        ],
+        [
+          823,
+          620
+        ],
+        [
+          799,
+          619
+        ],
+        [
+          782,
+          602
+        ],
+        [
+          771,
+          580
+        ]
+      ],
+      "lidTop": 532,
+      "lidDepth": 77,
+      "sclera": "normal/right/sclera.png",
+      "iris": "normal/right/iris.png",
+      "lashes": "normal/right/lashes.png",
+      "aperture": "normal/right/aperture.png",
+      "faceClip": "normal/right/face-clip.png",
+      "irisBounds": [
+        772,
+        545,
+        836,
+        614
+      ],
+      "irisUpperFill": [
+        [
+          24,
+          25,
+          45,
+          40,
+          45
+        ],
+        [
+          25,
+          25,
+          45,
+          40,
+          44
+        ],
+        [
+          26,
+          26,
+          45,
+          40,
+          45
+        ],
+        [
+          27,
+          27,
+          45,
+          40,
+          45
+        ],
+        [
+          28,
+          28,
+          45,
+          40,
+          44
+        ],
+        [
+          29,
+          29,
+          44,
+          39,
+          43
+        ],
+        [
+          30,
+          30,
+          43,
+          38,
+          42
+        ],
+        [
+          31,
+          31,
+          43,
+          38,
+          42
+        ],
+        [
+          32,
+          32,
+          42,
+          37,
+          41
+        ],
+        [
+          33,
+          32,
+          43,
+          38,
+          42
+        ],
+        [
+          34,
+          34,
+          47,
+          39,
+          43
+        ],
+        [
+          35,
+          35,
+          49,
+          44,
+          48
+        ],
+        [
+          36,
+          36,
+          49,
+          44,
+          49
+        ],
+        [
+          37,
+          37,
+          49,
+          44,
+          49
+        ],
+        [
+          38,
+          38,
+          49,
+          44,
+          49
+        ],
+        [
+          39,
+          39,
+          49,
+          44,
+          50
+        ],
+        [
+          40,
+          40,
+          49,
+          44,
+          50
+        ],
+        [
+          41,
+          41,
+          49,
+          37,
+          41
+        ],
+        [
+          42,
+          43,
+          41,
+          36,
+          40
+        ],
+        [
+          43,
+          43,
+          40,
+          35,
+          39
+        ],
+        [
+          44,
+          44,
+          40,
+          35,
+          39
+        ],
+        [
+          45,
+          45,
+          40,
+          35,
+          39
+        ],
+        [
+          46,
+          46,
+          40,
+          35,
+          39
+        ],
+        [
+          47,
+          47,
+          39,
+          34,
+          38
+        ],
+        [
+          48,
+          48,
+          39,
+          34,
+          38
+        ],
+        [
+          49,
+          49,
+          39,
+          34,
+          38
+        ],
+        [
+          50,
+          50,
+          38,
+          33,
+          37
+        ],
+        [
+          51,
+          51,
+          38,
+          33,
+          37
+        ],
+        [
+          52,
+          52,
+          38,
+          33,
+          37
+        ],
+        [
+          53,
+          53,
+          38,
+          33,
+          37
+        ],
+        [
+          54,
+          54,
+          38,
+          33,
+          37
+        ],
+        [
+          55,
+          55,
+          38,
+          33,
+          37
+        ],
+        [
+          56,
+          56,
+          38,
+          33,
+          37
+        ],
+        [
+          57,
+          57,
+          38,
+          33,
+          37
+        ],
+        [
+          58,
+          58,
+          38,
+          33,
+          37
+        ],
+        [
+          59,
+          59,
+          38,
+          33,
+          37
+        ],
+        [
+          60,
+          60,
+          37,
+          32,
+          36
+        ],
+        [
+          61,
+          61,
+          37,
+          32,
+          36
+        ],
+        [
+          62,
+          62,
+          37,
+          32,
+          36
+        ],
+        [
+          63,
+          63,
+          37,
+          32,
+          36
+        ],
+        [
+          64,
+          64,
+          37,
+          32,
+          36
+        ],
+        [
+          65,
+          65,
+          37,
+          32,
+          36
+        ],
+        [
+          66,
+          66,
+          37,
+          32,
+          36
+        ],
+        [
+          67,
+          67,
+          37,
+          32,
+          36
+        ],
+        [
+          68,
+          68,
+          37,
+          32,
+          36
+        ],
+        [
+          69,
+          69,
+          37,
+          32,
+          36
+        ],
+        [
+          70,
+          70,
+          37,
+          32,
+          36
+        ],
+        [
+          71,
+          71,
+          36,
+          31,
+          35
+        ],
+        [
+          72,
+          72,
+          36,
+          31,
+          35
+        ],
+        [
+          73,
+          73,
+          36,
+          31,
+          35
+        ],
+        [
+          74,
+          74,
+          36,
+          31,
+          35
+        ],
+        [
+          75,
+          75,
+          36,
+          31,
+          35
+        ],
+        [
+          76,
+          76,
+          36,
+          31,
+          35
+        ],
+        [
+          77,
+          77,
+          37,
+          32,
+          36
+        ],
+        [
+          78,
+          78,
+          37,
+          32,
+          36
+        ],
+        [
+          79,
+          79,
+          37,
+          32,
+          36
+        ],
+        [
+          80,
+          80,
+          37,
+          32,
+          36
+        ],
+        [
+          81,
+          81,
+          37,
+          32,
+          36
+        ],
+        [
+          82,
+          82,
+          37,
+          32,
+          36
+        ],
+        [
+          83,
+          83,
+          36,
+          31,
+          35
+        ]
+      ]
+    }
+  ],
+  "renderer": "face-controller.js",
+  "patch": "Rebuilt from r2.1: eyebrow visibility, shared reference eyes, frightened brows, crying lashes and separated tears. Retains r2.1 down-gaze fix.",
+  "version": "r2.3-rebuilt",
+  "recovery": {
+    "source": "r2.1",
+    "exactPreviousArchiveRecovered": false,
+    "bodyAssetsAvailable": false
+  }
+}

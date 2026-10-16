@@ -1,0 +1,878 @@
+{
+  "format": "coopanion-complete-part-rig-2",
+  "source": {
+    "file": "original.png",
+    "width": 1206,
+    "height": 1304,
+    "sha256": "3948b74e98cc10b757f5d498c057acb6c9fa952fd5824cf6cc5e2e9feefc71bd"
+  },
+  "units": {
+    "S": 0.183,
+    "X0": 680,
+    "FEET": 1253
+  },
+  "pivots": {
+    "body": [
+      128.0,
+      256.0
+    ],
+    "waist": [
+      130.013,
+      197.989
+    ],
+    "neck": [
+      131.66,
+      151.141
+    ],
+    "armNear": [
+      119.399,
+      170.356
+    ],
+    "armFar": [
+      148.13,
+      166.147
+    ],
+    "legBack": [
+      124.157,
+      205.126
+    ],
+    "legFront": [
+      144.287,
+      205.675
+    ],
+    "tail": [
+      108.602,
+      193.963
+    ],
+    "finNear": [
+      109.7,
+      72.268
+    ],
+    "finFar": [
+      151.424,
+      72.817
+    ],
+    "ahoge": [
+      131.66,
+      70.987
+    ],
+    "head": [
+      134.039,
+      119.848
+    ],
+    "elbowNear": [
+      103.37614549653581,
+      188.49645612009238
+    ],
+    "wristNear": [
+      91.4,
+      201.1
+    ],
+    "elbowFar": [
+      159.5343233256351,
+      186.7738752886836
+    ],
+    "wristFar": [
+      168.26,
+      201.28300000000002
+    ],
+    "rightShoulder": [
+      123.608,
+      162.304
+    ],
+    "waveShoulder": [
+      122.144,
+      167.245
+    ],
+    "waveElbow": [
+      105.9510853524787,
+      186.0474310569296
+    ],
+    "waveWrist": [
+      92.1668430719233,
+      202.09700154326814
+    ]
+  },
+  "view": [
+    -18,
+    -15,
+    274,
+    273
+  ],
+  "mesh": {
+    "grid": [
+      64,
+      70
+    ],
+    "box": [
+      3.5600000000000023,
+      26.700999999999993,
+      220.698,
+      238.632
+    ],
+    "bones": [
+      "waist",
+      "headMid",
+      "skirt",
+      "legBack",
+      "legFront",
+      "armNear",
+      "armFar",
+      "tailBend",
+      "hairLeft",
+      "hairRight",
+      "bangsSway",
+      "finNear",
+      "finFar"
+    ]
+  },
+  "face": {
+    "leftEye": {
+      "box": [
+        566,
+        501,
+        164,
+        101
+      ],
+      "center": [
+        652,
+        518
+      ],
+      "bottom": 590
+    },
+    "rightEye": {
+      "box": [
+        792,
+        510,
+        114,
+        94
+      ],
+      "center": [
+        850,
+        524
+      ],
+      "bottom": 593
+    },
+    "mouth": {
+      "box": [
+        725,
+        609,
+        67,
+        23
+      ],
+      "center": [
+        758,
+        620
+      ]
+    },
+    "skin": [
+      253,
+      242,
+      233
+    ],
+    "ink": "#190d08",
+    "mouthInk": "#cf7664",
+    "base": {
+      "file": "face-base.png",
+      "rect": [
+        550,
+        430,
+        370,
+        232
+      ]
+    }
+  },
+  "parts": [
+    {
+      "id": "headBack",
+      "tex": "headBack",
+      "file": "tex/headBack.png",
+      "parent": "headMid",
+      "z": 0.5,
+      "sourceBox": [
+        320,
+        15,
+        986,
+        745
+      ],
+      "box": [
+        62.120000000000005,
+        29.445999999999998,
+        121.878,
+        133.59
+      ],
+      "grid": [
+        22,
+        24
+      ]
+    },
+    {
+      "id": "hairL",
+      "tex": "hairL",
+      "file": "tex/hairL.png",
+      "parent": "hairLeft",
+      "z": 1,
+      "sourceBox": [
+        65,
+        189,
+        475,
+        970
+      ],
+      "box": [
+        15.454999999999998,
+        61.28800000000001,
+        75.03,
+        142.923
+      ],
+      "grid": [
+        16,
+        24
+      ]
+    },
+    {
+      "id": "hairR",
+      "tex": "hairR",
+      "file": "tex/hairR.png",
+      "parent": "hairRight",
+      "z": 1.1,
+      "sourceBox": [
+        890,
+        229,
+        1177,
+        941
+      ],
+      "box": [
+        166.43,
+        68.608,
+        52.521,
+        130.296
+      ],
+      "grid": [
+        11,
+        24
+      ]
+    },
+    {
+      "id": "legL",
+      "tex": "legL",
+      "file": "tex/legL.png",
+      "parent": "legBack",
+      "z": 2,
+      "sourceBox": [
+        549,
+        957,
+        706,
+        1255
+      ],
+      "box": [
+        104.027,
+        201.832,
+        28.730999999999998,
+        54.534
+      ],
+      "grid": [
+        6,
+        11
+      ]
+    },
+    {
+      "id": "legR",
+      "tex": "legR",
+      "file": "tex/legR.png",
+      "parent": "legFront",
+      "z": 2.2,
+      "sourceBox": [
+        688,
+        960,
+        838,
+        1243
+      ],
+      "box": [
+        129.464,
+        202.381,
+        27.45,
+        51.789
+      ],
+      "grid": [
+        6,
+        11
+      ]
+    },
+    {
+      "id": "torso",
+      "tex": "torso",
+      "file": "tex/torsoCollarThin.png",
+      "parent": "collarConnection",
+      "z": 5,
+      "sourceBox": [
+        567,
+        658,
+        849,
+        968
+      ],
+      "box": [
+        107.321,
+        147.115,
+        51.606,
+        56.73
+      ],
+      "grid": [
+        28,
+        62
+      ]
+    },
+    {
+      "id": "coat",
+      "tex": "coat",
+      "file": "tex/coat.png",
+      "parent": "clothes",
+      "z": 5.02,
+      "sourceBox": [
+        413,
+        963,
+        944,
+        1186
+      ],
+      "box": [
+        79.13900000000001,
+        202.93,
+        97.173,
+        40.809
+      ],
+      "grid": [
+        21,
+        8
+      ]
+    },
+    {
+      "id": "seated",
+      "tex": "seated",
+      "file": "tex/seated.png",
+      "parent": "skirtSit",
+      "z": 5.1,
+      "sourceBox": [
+        370,
+        954,
+        1016,
+        1142
+      ],
+      "box": [
+        71.27000000000001,
+        201.28300000000002,
+        118.218,
+        34.403999999999996
+      ],
+      "grid": [
+        22,
+        7
+      ]
+    },
+    {
+      "id": "head",
+      "tex": "head",
+      "file": "tex/head.png",
+      "parent": "headMid",
+      "z": 9,
+      "sourceBox": [
+        404,
+        16,
+        941,
+        745
+      ],
+      "box": [
+        77.492,
+        29.62900000000002,
+        98.271,
+        133.407
+      ],
+      "grid": [
+        21,
+        24
+      ]
+    },
+    {
+      "id": "armR",
+      "tex": "armR",
+      "file": "tex/armR.png",
+      "parent": "armFar",
+      "z": 1.6,
+      "sourceBox": [
+        755,
+        708,
+        903,
+        922
+      ],
+      "box": [
+        141.725,
+        156.265,
+        27.084,
+        39.162
+      ],
+      "grid": [
+        12,
+        17
+      ]
+    },
+    {
+      "id": "forearmR",
+      "tex": "forearmR",
+      "file": "tex/forearmR.png",
+      "parent": "forearmFar",
+      "z": 1.615,
+      "sourceBox": [
+        800,
+        833,
+        954,
+        996
+      ],
+      "box": [
+        149.96,
+        179.14,
+        28.182,
+        29.829
+      ],
+      "grid": [
+        12,
+        13
+      ]
+    },
+    {
+      "id": "handR",
+      "tex": "handR",
+      "file": "tex/handR.png",
+      "parent": "wristFar",
+      "z": 1.62,
+      "sourceBox": [
+        838,
+        911,
+        959,
+        1008
+      ],
+      "box": [
+        156.914,
+        193.414,
+        22.143,
+        17.751
+      ],
+      "grid": [
+        10,
+        8
+      ]
+    },
+    {
+      "id": "tail",
+      "tex": "tail",
+      "file": "tex/tail.png",
+      "parent": "tailBend",
+      "z": -2,
+      "sourceBox": [
+        200,
+        898,
+        610,
+        1187
+      ],
+      "box": [
+        40.16,
+        191.035,
+        75.03,
+        52.887
+      ],
+      "grid": [
+        24,
+        24
+      ]
+    },
+    {
+      "id": "floatingPlate",
+      "tex": "floatingPlate",
+      "file": "tex/floatingPlate.png",
+      "parent": "floatingPlate",
+      "z": 6.5,
+      "sourceBox": [
+        434,
+        731,
+        643,
+        975
+      ],
+      "box": [
+        82.982,
+        160.474,
+        38.247,
+        44.652
+      ],
+      "grid": [
+        11,
+        13
+      ]
+    },
+    {
+      "id": "waveShoulderSkin",
+      "tex": "waveShoulderSkin",
+      "parent": "shoulderSkinBridge",
+      "z": 4.95,
+      "sourceBox": [
+        580,
+        688,
+        674,
+        788
+      ],
+      "box": [
+        109.7,
+        152.60500000000002,
+        17.201999999999998,
+        18.3
+      ],
+      "grid": [
+        47,
+        50
+      ],
+      "procedural": true,
+      "generator": "reference-shoulder.js:original pixels"
+    },
+    {
+      "id": "waveUpper",
+      "tex": "waveUpper",
+      "file": "tex/waveUpper.png",
+      "parent": "waveSleeveRoot",
+      "z": 4.9,
+      "sourceBox": [
+        395,
+        700,
+        715,
+        1070
+      ],
+      "box": [
+        75.845,
+        154.801,
+        58.56,
+        67.71
+      ],
+      "grid": [
+        32,
+        37
+      ]
+    },
+    {
+      "id": "waveForearm",
+      "tex": "waveForearm",
+      "file": "tex/waveForearm.png",
+      "parent": "waveElbowJoint",
+      "z": 5.7,
+      "sourceBox": [
+        395,
+        700,
+        715,
+        1070
+      ],
+      "box": [
+        75.845,
+        154.801,
+        58.56,
+        67.71
+      ],
+      "grid": [
+        16,
+        18
+      ],
+      "occludeBy": "floatingPlate"
+    },
+    {
+      "id": "waveHandClosed",
+      "tex": "waveHandClosed",
+      "file": "tex/waveHandClosed.png",
+      "parent": "waveWristJoint",
+      "z": 5.72,
+      "sourceBox": [
+        395,
+        700,
+        715,
+        1070
+      ],
+      "box": [
+        75.845,
+        154.801,
+        58.56,
+        67.71
+      ],
+      "grid": [
+        16,
+        18
+      ],
+      "occludeBy": "floatingPlate"
+    },
+    {
+      "id": "waveHandOpen",
+      "tex": "waveHandOpen",
+      "file": "tex/waveHandOpen.png",
+      "parent": "waveWristJoint",
+      "z": 5.73,
+      "sourceBox": [
+        416.19039930012735,
+        946.4480958648531,
+        505.19039930012735,
+        1047.4480958648533
+      ],
+      "box": [
+        79.72284307192331,
+        199.90100154326814,
+        16.287,
+        18.483000000000022
+      ],
+      "grid": [
+        10,
+        12
+      ],
+      "occludeBy": "floatingPlate"
+    },
+    {
+      "id": "shoulderSocketLining",
+      "tex": "shoulderSocketLining",
+      "procedural": true,
+      "generator": "reference-shoulder.js:lining",
+      "sourceBox": [
+        568,
+        728,
+        675,
+        795
+      ],
+      "box": [
+        107.504,
+        159.925,
+        19.581,
+        12.261
+      ],
+      "parent": "shoulderLiningBridge",
+      "grid": [
+        54,
+        34
+      ],
+      "z": 4.8
+    }
+  ],
+  "shoulderAttachments": {
+    "near": {
+      "source": [
+        648.0,
+        768.0
+      ],
+      "arm": "waveUpper",
+      "body": "torso",
+      "elbow": "waveForearm",
+      "closedHand": "waveHandClosed",
+      "openHand": "waveHandOpen"
+    },
+    "far": {
+      "source": [
+        790,
+        762
+      ],
+      "arm": "armR",
+      "body": "torso"
+    }
+  },
+  "layers": {
+    "farArm": "Behind torso, coat and legs",
+    "nearArm": "Upper sleeve under torso; elbow and palm rise in front of head during wave",
+    "floatingPlate": "Coat attachment: floatingPlate -> clothes -> body; never rotates with arm",
+    "tail": "Complete continuous rear silhouette with root following clothes"
+  },
+  "armArticulation": {
+    "source": "sources/three-view-reference.png",
+    "landmarks": {
+      "Near": {
+        "shoulder": [
+          633,
+          785
+        ],
+        "elbow": [
+          545.4434180138569,
+          884.1281755196305
+        ],
+        "wrist": [
+          480,
+          953
+        ]
+      },
+      "Far": {
+        "shoulder": [
+          790,
+          762
+        ],
+        "elbow": [
+          852.3187066974596,
+          874.7151655119321
+        ],
+        "wrist": [
+          900,
+          954
+        ]
+      }
+    },
+    "nodes": [
+      "waveUpperJoint",
+      "waveElbowJoint",
+      "waveWristJoint",
+      "armFar",
+      "forearmFar",
+      "wristFar"
+    ],
+    "tailRoot": [
+      574,
+      914
+    ],
+    "sourceSleeves": "Original three-view pixels registered and mirrored; no new sleeve design",
+    "nearBinding": "waveUpperJoint -> waveElbowJoint -> waveWristJoint"
+  },
+  "historicalComponentRepair": {
+    "head": "Complete shell with preserved native expression interior",
+    "rightHand": "handNearComplete; original refined handL retained unmodified",
+    "rightShoulder": "Original source skin restored behind original refined sleeve and plate"
+  },
+  "waveCorrection": {
+    "plateParent": "floatingPlate -> clothes -> body",
+    "shoulderSource": [
+      648.0,
+      768.0
+    ],
+    "elbowSource": [
+      559.5141276091732,
+      870.7455249012546
+    ],
+    "wristSource": [
+      484.19039930012735,
+      958.4480958648531
+    ],
+    "movingParts": [
+      "waveUpper",
+      "waveForearm",
+      "waveHandClosed",
+      "waveHandOpen"
+    ],
+    "joints": [
+      "waveUpperJoint",
+      "waveElbowJoint",
+      "waveWristJoint"
+    ],
+    "raisedLayers": {
+      "forearm": 10.2,
+      "hand": 10.4
+    },
+    "waveAnglesDegrees": {
+      "upper": 42,
+      "elbow": 60,
+      "wristSwing": 10
+    },
+    "note": "Only the sleeve chain articulates. The white plate and shoulder skin stay attached to clothes."
+  },
+  "historicalWholeArmReset": {
+    "sourceShoulder": [
+      656,
+      741
+    ],
+    "retiredPartIds": [
+      "armL",
+      "forearmL",
+      "handL",
+      "handWave",
+      "floatingPlate",
+      "shoulderNear",
+      "handNearComplete"
+    ],
+    "parts": [
+      "rightArmClosed",
+      "rightArmOpen"
+    ],
+    "binding": "Whole arm, glove and white plate share a single shoulder socket; rigid continuous atlas prevents inter-part separation",
+    "source": "Original reference shoulder/glove with existing refined sleeve and white-plate pixels"
+  },
+  "shoulderDepthCorrection": {
+    "shoulder": "New complete generated shoulder silhouette, original clothing preserved",
+    "occlusion": "Per-pixel plate alpha in deformed coordinates; raised arm remains readable in front of hair outside the plate silhouette"
+  },
+  "chibiStyleCorrection": {
+    "scope": "New shoulder skin only; existing refined components and expressions preserved",
+    "style": "Simple warm peach fill, minimal flat shadow, no anatomical creases or white highlight",
+    "silhouette": "Simplified curved sprite, same source box and bone registration",
+    "depth": "Existing coat/forearm pixel occlusion unchanged"
+  },
+  "shoulderContinuityRepair": {
+    "method": "Common cloth-to-upper-arm weighted deformation field for sleeve root and shoulder skin",
+    "sleeveRootSupportSourcePixels": [
+      5,
+      110
+    ],
+    "mesh": "10px sleeve cells and ~5px shoulder cells",
+    "fixedRegion": "Inner clavicle and buried sleeve lip follow clothes",
+    "rigidRegion": "Distal sleeve, elbow, forearm and wrist keep original FK",
+    "textures": "All existing textures unchanged",
+    "plate": "No transform or layer changes"
+  },
+  "headArtRegistration": {
+    "source": "original.png",
+    "canvas": [
+      1206,
+      1304
+    ],
+    "registration": {
+      "x": 0,
+      "y": 0,
+      "scale": 1
+    },
+    "headRest": {
+      "scale": 1,
+      "dx": 0,
+      "dy": 0
+    },
+    "expressionLegacyRegistration": {
+      "x": 115.4,
+      "y": 25,
+      "scale": 0.9
+    },
+    "grid": [
+      48,
+      52
+    ],
+    "basis": "Original source pixels replace repaired head-shell outline; existing face components kept inside a strict interior mask",
+    "ponytails": "Original hairL/hairR textures and rest geometry unchanged",
+    "retainedLimitation": "Legacy iris artwork has minor size/asymmetry differences; neutral mouth is a different expression and was not redesigned",
+    "rootOverlapPatchSourceBox": [
+      425,
+      207,
+      468,
+      272
+    ]
+  },
+  "collarConnectionRepair": {
+    "method": "Localized monotonic neckline mesh, existing texture pixels only",
+    "sourceRows": [
+      658,
+      710,
+      737,
+      770,
+      810
+    ],
+    "targetRows": [
+      650,
+      696,
+      708,
+      752,
+      810
+    ],
+    "head": "Unchanged transform and silhouette",
+    "scope": "Torso neckline only: upper source ROI y<770; displacement field x575..840 and y<810; lower torso and all other parts unchanged at their original registration",
+    "art": "Original collar and central neckline pixels assembled at runtime; minimal flat skin backing under existing shoulders"
+  },
+  "shoulderShapeRepair": {
+    "reference": "original.png",
+    "sourceBox": [
+      580,
+      688,
+      674,
+      788
+    ],
+    "method": "Original visible shoulder pixels; no painted cap or cross-section growth. Retains shared sleeve-root skinning.",
+    "rollback": "v0.3.12 near/far growth and procedural foundation contours removed; sleeve and far-arm geometry restored to v0.3.11.",
+    "protected": "Head/neck, face, motion.js, pivots, white plate, torso and coat unchanged.",
+    "minimalSplit": "Visible original-pixel shoulder and a dark underlap below existing sleeve/plate; removes duplicate torso skin backing. Upper reference edge locally registered to existing collar and face curl."
+  }
+}
