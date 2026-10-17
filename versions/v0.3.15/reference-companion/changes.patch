@@ -1,0 +1,90 @@
+diff --git a/figure.json b/figure.json
+index 95a7baa..d812a9d 100644
+--- a/figure.json
++++ b/figure.json
+@@ -2,7 +2,7 @@
+   "manifest": 2,
+   "api": 2,
+   "id": "reference-companion",
+-  "version": "0.3.14",
++  "version": "0.3.15",
+   "name": {
+     "zh": "原图兽耳桌宠（局部轮廓还原）",
+     "en": "Reference Companion (Compact Reference Repair)"
+diff --git a/expression-bridge.js b/expression-bridge.js
+index 0a75510..92c96f3 100644
+--- a/expression-bridge.js
++++ b/expression-bridge.js
+@@ -1,4 +1,4 @@
+-/** Adapter only: do not alter r2.3 expression textures, manifest, or controller. */
++/** Adapter for the unchanged r2.3 expression textures. */
+ import './expressions/face-controller.js';
+ import './expressions/controller-config.js';
+ const ALIASES={dragged:'flustered',run:'neutral',dizzy:'confused',content:'neutral',waking:'sleepy',squeeze:'sleep',listening:'neutral',bowing:'sleep'};
+@@ -40,11 +40,21 @@ export async function createExpressionBridge(base,opts={}) {
+ 
+  const interior=make(1206,1304),ig=interior.getContext('2d');
+  const outside=make(...config.canvas),og=outside.getContext('2d');
+- let lastKey='',lastFrame=null;
++ let lastKey='',lastFrame=null,loadError=null;
++ const loading=new Set();
+  const registration=Object.freeze({x:0,y:0,scale:1});
+  function paint(frame={}) {
++  if(loadError)throw loadError;
+   const requested=frame.face??frame.expression??'neutral';
+-  const expression=config.expressions[requested]?requested:(requested==='content'&&frame.drowse>.7?'sleep':ALIASES[requested]??'neutral');
++  let expression=config.expressions[requested]?requested:(requested==='content'&&frame.drowse>.7?'sleep':ALIASES[requested]??'neutral');
++  if(!controller.hasExpression(expression)){
++   const pending=expression;
++   if(!loading.has(pending)){
++    loading.add(pending);
++    controller.ensureExpression(pending).catch(error=>{loadError=error;}).finally(()=>loading.delete(pending));
++   }
++   expression='neutral';
++  }
+   const blink=Math.max(frame.blink||0,frame.eyeClose||0);
+   const input={expression,blink,talk:frame.talk||0};
+   if(Array.isArray(frame.gaze))input.gaze=frame.gaze;
+diff --git a/expressions/face-controller.js b/expressions/face-controller.js
+index 95b26b0..8f75923 100644
+--- a/expressions/face-controller.js
++++ b/expressions/face-controller.js
+@@ -2,15 +2,33 @@
+   'use strict';
+   const clamp=(x,a,b)=>Math.min(b,Math.max(a,Number(x)||0));
+   class FaceController {
+-    constructor(config,images,createCanvas){this.config=config;this.images=images;this.createCanvas=createCanvas;this.eyeBuffers=new Map();}
++    constructor(config,images,createCanvas,loadImage){this.config=config;this.images=images;this.createCanvas=createCanvas;this.loadImage=loadImage;this.pending=new Map();this.eyeBuffers=new Map();}
++    static expressionPaths(config,name){
++      const spec=config.expressions[name];
++      if(!spec)throw new Error('Unknown expression: '+name);
++      const paths=['brows','eyes','mouth','mouthClear','blush','fx','eyeOverlay','eyeLashes'].map(k=>spec[k]).filter(Boolean);
++      paths.push('parts/'+name+'/mouth.png');
++      if(['surprised','scared','flustered','excited'].includes(name))paths.push(config.expressions.sleep.eyes);
++      return [...new Set(paths)];
++    }
+     static async load(config,loadImage,createCanvas){
+       const paths=new Set([config.base,config.normalBase,config.eyeClear,config.faceMask]);
+       for(const e of config.normalEyes)for(const k of ['sclera','iris','lashes','aperture','faceClip'])paths.add(e[k]);
+-      for(const e of Object.values(config.expressions))for(const k of ['brows','eyes','mouth','mouthClear','blush','fx'])paths.add(e[k]);
+-      for(const e of Object.values(config.expressions))for(const k of ['eyeOverlay','eyeLashes'])if(e[k])paths.add(e[k]);
+-      for(const name of Object.keys(config.expressions))paths.add('parts/'+name+'/mouth.png');
++      for(const p of FaceController.expressionPaths(config,'neutral'))paths.add(p);
++      paths.add('parts/happy/mouth.png');
+       const entries=await Promise.all([...paths].map(async p=>[p,await loadImage(p)]));
+-      return new FaceController(config,new Map(entries),createCanvas);
++      return new FaceController(config,new Map(entries),createCanvas,loadImage);
++    }
++    hasExpression(name){return FaceController.expressionPaths(this.config,name).every(p=>this.images.has(p));}
++    async ensureExpression(name){
++      await Promise.all(FaceController.expressionPaths(this.config,name).map(p=>{
++        if(this.images.has(p))return Promise.resolve();
++        if(!this.pending.has(p)){
++          const request=Promise.resolve().then(()=>this.loadImage(p)).then(image=>{this.images.set(p,image);}).finally(()=>this.pending.delete(p));
++          this.pending.set(p,request);
++        }
++        return this.pending.get(p);
++      }));
+     }
+     drawNormalEye(ctx,e,open,gaze,tilt,scaleY=1){
+       const [x,y,x1,y1]=e.rect,w=x1-x,h=y1-y;

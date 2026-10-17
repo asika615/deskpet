@@ -54,10 +54,19 @@ for(let i=0;i<480;i++){
 console.log(version+' motion complete');
 protectedTorsoHash=sha(c.kit.rig.textureBytes('torso'));
 let cases=0;
-for(const face of Object.keys(globalThis.EXPRESSION_CONFIG.expressions))for(const blink of [0,.5,1])for(const talk of [0,.7]){
-  c.figure.draw(c.g,{}, {...c.frame,t:8+cases/60,face,blink,talk,look:[1,-1]});
+for(const face of Object.keys(globalThis.EXPRESSION_CONFIG.expressions)){
+  for(const blink of [0,.5,1])for(const talk of [0,.7]){
+  const frame={...c.frame,t:8+cases/60,face,blink,talk,look:[1,-1]};
+  c.figure.draw(c.g,{},frame);
+  const deadline=Date.now()+10000;
+  while(c.figure.diagnostics().expression?.expression!==face){
+    if(Date.now()>deadline)throw new Error('Expression did not load: '+face);
+    await new Promise(resolve=>setTimeout(resolve,10));
+    c.figure.draw(c.g,{},frame);
+  }
   faceHashes.push(sha(c.kit.rig.textureBytes('expressionHead')));cases++;
   if(cases%10===0)globalThis.gc?.();
+  }
 }
 await fs.mkdir(path.join(root,'.tmp'),{recursive:true});
 await fs.writeFile(path.join(root,'.tmp',version+'-capture.json'),JSON.stringify({hashes,joints,faceHashes,folded,shoulderFolded,maxSharedFieldError,protectedTorsoHash,cases}));

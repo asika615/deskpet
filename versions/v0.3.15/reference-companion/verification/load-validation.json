@@ -1,0 +1,23 @@
+{
+  "version": "0.3.15",
+  "baseline": "0.3.14",
+  "method": "Production figure and expression pipeline with software renderer; separate capture processes",
+  "motionFrames": 480,
+  "expressionCases": 120,
+  "motionHashesEqual": true,
+  "jointCoordinatesEqual": true,
+  "expressionPixelsEqual": true,
+  "protectedTorsoHashEqual": true,
+  "pngFilesByteUnchanged": 182,
+  "opaqueFoldedTriangles": 0,
+  "opaqueShoulderFoldedTriangles": 0,
+  "controllerInitialImageCountBefore": 156,
+  "controllerInitialImageCountAfter": 22,
+  "estimatedDecodedRgbaMiBBefore": 529,
+  "estimatedDecodedRgbaMiBAfter": 43,
+  "limitations": [
+    "Decoded RGBA size derives from PNG dimensions, not measured resident process memory",
+    "Software rasterization does not establish browser GPU or Electron import performance",
+    "A stalled app renderer can also time out built-in figures independently of this pack"
+  ]
+}

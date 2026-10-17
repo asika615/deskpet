@@ -1,0 +1,32 @@
+{
+  "version": "0.3.16",
+  "baseline": "0.3.15",
+  "method": "Production figure with @napi-rs/canvas and software rig; same local machine, sequential runs. Electron process sampling was separate and is not a frame-rate measurement.",
+  "motionFrames": 480,
+  "motionMeshesEqual": true,
+  "expressionCasesRendered": 120,
+  "foldedTorsoTriangles": 0,
+  "foldedShoulderTriangles": 0,
+  "sourcePngsUnchanged": true,
+  "expressionTexturePixels": {"before": 1572624, "after": 393156},
+  "realisticGazeAndBlink120Frames": {
+    "textureUploads": {"before": 99, "after": 22},
+    "softwareMillisecondsPerFrame": {"before": 61.6, "after": 5.4}
+  },
+  "neutralFace603x652Comparison": {
+    "sample": "look [1,-1], blink 0.5, talk 0.7",
+    "meanAbsoluteRgbaChannelDifference": 0.105,
+    "pixelsWithRgbDifferenceAbove60": 458,
+    "totalPixels": 393156
+  },
+  "coopanionElectron": {
+    "version": "0.2.3",
+    "settings": "30 FPS, frame-rate lock off, scale 1.25",
+    "rendererCpuCoresBeforeApproximately": 0.83,
+    "rendererCpuCoresAfterSamples": [0.47, 0.54],
+    "gpuCpuCoresAfterSamples": [0.05, 0.09],
+    "figureLoaded": true,
+    "dressPreview": "First attempt timed out after 20 seconds; retry displayed the character without new errors."
+  },
+  "limitations": "Timing is environment-specific; actual frame cadence, dropped frames and perceptual smoothness were not measured."
+}
