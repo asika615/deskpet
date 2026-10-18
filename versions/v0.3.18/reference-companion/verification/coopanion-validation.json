@@ -1,0 +1,40 @@
+{
+  "version": "0.3.18",
+  "testedAt": "2026-10-19T00:27:08+08:00",
+  "host": {
+    "application": "Coopanion 0.2.4",
+    "figureId": "reference-companion",
+    "figureVersion": "0.3.18",
+    "frameRate": 30,
+    "frameRateLocked": false,
+    "stateEndpoint": "http://127.0.0.1:7797/api/state"
+  },
+  "load": {
+    "desktopPetWindow": "passed",
+    "figureEvent": "原图兽耳桌宠（轻量渲染）",
+    "fallbackObserved": false
+  },
+  "actions": {
+    "command": "pet_act",
+    "sequence": [
+      "wave",
+      "jump",
+      "flap"
+    ],
+    "result": "passed",
+    "runtimeLog": "desktop-pet.self: pet_act, append_file, end_turn",
+    "errorEventObserved": false
+  },
+  "dressPreview": {
+    "result": "blocked",
+    "detail": "The dress iframe can still report that the figure was not ready within 20 seconds; this is separate from the connected desktop pet window."
+  },
+  "softwareRenderer": {
+    "result": "blocked",
+    "detail": "The repository render-review script could not start because Node was denied lstat access to the local Codex runtime dependency tree."
+  },
+  "limitations": [
+    "No frame-drop measurement was taken on other hardware.",
+    "The dress-page timeout remains an open integration issue."
+  ]
+}

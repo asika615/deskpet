@@ -1,0 +1,27 @@
+{
+  "version": "0.3.18",
+  "baseline": "user attached v0.3.17",
+  "status": "candidate; actual Coopanion window acceptance blocked",
+  "paths": 25,
+  "updatesPerPathPerVersion": 288,
+  "renderedFramesPerPathPerVersion": 96,
+  "keyframesPerPathPerVersion": 7,
+  "publicWords": 38,
+  "nativeSwitchScenarios": 14,
+  "targetTransitionPairs": 625,
+  "maxTargetAngleStepAt60Hz": 4.5,
+  "maxObservedNativeAngleStep": 4.117953808077928,
+  "pngFilesUnchanged": 184,
+  "modelUnchanged": true,
+  "stableFaceCasesUnchanged": 120,
+  "protectedGeometryMismatches": 0,
+  "opaqueArmTriangleFoldSamples": 0,
+  "realBrowserVerified": false,
+  "electronVerified": false,
+  "rendering": "Unmodified native Coopanion body kit drives actual pack factories; injected software rig plus native world transforms. Not Electron/Browser WebGL capture.",
+  "blockers": [
+    "Local Chromium exits SIGTRAP before about:blank",
+    "Cloud browser cannot reach workspace localhost",
+    "Cloud browser policy rejects file://; no workaround attempted"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "version": "0.3.17",
+  "baseline": "0.3.16",
+  "method": "Production figure, Canvas expression controller and deformer functions; deterministic software raster; emulated DOM/GL host contract",
+  "motionFrames": 480,
+  "protectedMeshesEqual": true,
+  "shoulderElbowWristCoordinatesEqual": true,
+  "neckBodiceAtlasEqual": true,
+  "foldedOpaqueTorsoTriangles": 0,
+  "foldedOpaqueArmConnectionTriangles": 0,
+  "unchangedOriginalPngFiles": 182,
+  "expressionCases": 120,
+  "unchangedExpressionCases": 114,
+  "changedExpressionCases": {
+    "expression": "love",
+    "indices": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "blink": [
+      0,
+      0.5,
+      1
+    ],
+    "talk": [
+      0,
+      0.7
+    ]
+  },
+  "normalBlinkTalkFaceCropPixelIdentical": true,
+  "headTexture": {
+    "width": 603,
+    "height": 652,
+    "registration": {
+      "x": 0,
+      "y": 0,
+      "scale": 2
+    }
+  },
+  "originalImageModeIdentical": true,
+  "fourPoseInnerMasksConnected": true,
+  "host": {
+    "upstreamCommit": "ff30069",
+    "publicWordsExecuted": 37,
+    "usesPackRenderer": true,
+    "maskDrawsObserved": true
+  },
+  "limitations": [
+    "No actual Electron/GPU execution in this session",
+    "Alpha connectivity is not an anatomical or perceptual score: v16 was also pixel-connected",
+    "original.png contains no hidden sleeve artwork; small buried fabric underlaps reuse the existing sleeve material"
+  ]
+}
